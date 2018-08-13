@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近想开发一个rest API的框架，需要用到插件机制。正好前段时间在玩Hexo，觉得它那套机制还不错，于是参考了一下。本文总结一下它的实现思路">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo插件机制分析">
+<meta property="og:url" content="http://yoursite.com/2015/08/19/Hexo插件机制分析/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="最近想开发一个rest API的框架，需要用到插件机制。正好前段时间在玩Hexo，觉得它那套机制还不错，于是参考了一下。本文总结一下它的实现思路">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo插件机制分析">
+<meta name="twitter:description" content="最近想开发一个rest API的框架，需要用到插件机制。正好前段时间在玩Hexo，觉得它那套机制还不错，于是参考了一下。本文总结一下它的实现思路">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/08/19/Hexo插件机制分析/"/>
+
+
+
+
+
+  <title>Hexo插件机制分析 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/08/19/Hexo插件机制分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hexo插件机制分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-08-19T15:43:55+09:00">
+                2015-08-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
+                    <span itemprop="name">源码阅读</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近想开发一个rest API的框架，需要用到插件机制。正好前段时间在玩Hexo，觉得它那套机制还不错，于是参考了一下。本文总结一下它的实现思路<br><a id="more"></a></p>
+<h1 id="CLI启动"><a href="#CLI启动" class="headerlink" title="CLI启动"></a>CLI启动</h1><p>有种流行的做法是把cli和实现分离，比如grunt-cli和grunt。hexo也是采取这种方式，hexo-cli专门处理命令行，hexo才是具体的实现。可以像bash一样执行hexo-cli的命令</p>
+<h2 id="启动脚本"><a href="#启动脚本" class="headerlink" title="启动脚本"></a>启动脚本</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env node</span><br><span class="line"></span><br><span class="line">&apos;use strict&apos;;</span><br><span class="line"></span><br><span class="line">require(&apos;../lib&apos;)();</span><br></pre></td></tr></table></figure>
+<h2 id="搜索路径，初始化Hexo"><a href="#搜索路径，初始化Hexo" class="headerlink" title="搜索路径，初始化Hexo"></a>搜索路径，初始化Hexo</h2><p>上面的脚本，实际上执行的是lib/index.js，核心代码如下。为了方便阅读，省略了与流程无关的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">findPkg(cwd, args).then(function(path)&#123;</span><br><span class="line"></span><br><span class="line">    if(!path)&#123;</span><br><span class="line">        return runCLICommand(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    var modulePath = pathFn.join(path, &apos;node_modules&apos;, &apos;hexo&apos;);</span><br><span class="line"></span><br><span class="line">    return fs.exists(modulePath).then(function(exist)&#123;</span><br><span class="line">      </span><br><span class="line">      if (!exist)&#123;</span><br><span class="line">        return process.exit(1);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      var Hexo = require(modulePath);</span><br><span class="line">      hexo = new Hexo(path, args);</span><br><span class="line">      log = hexo.log;</span><br><span class="line"></span><br><span class="line">      return hexo.init().then(runHexoCommand);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure></p>
+<p>首先，Hexo大量使用了bluebird，包括上面代码中的fs也不是node核心模块的fs，而是经过promise化的API，所以习惯了callback风格的人可能会看得晕头转向，怎么全是各种return。本文就不介绍bluebird了，基本上就是前一个function执行完之后，会进入下一个then方法</p>
+<p>findPkg具体的代码不展开了，目的是从cwd（当前目录，也就是执行hexo xxx命令的目录）递归向上查找package.json里是否包含Hexo属性，如果有的话，就把此目录作为Hexo的根目录</p>
+<p>如果找不到根目录，就执行hexo-cli自带的3个基础命令（init, help, version）；如果找到了根目录，就require hexo module，然后实例化，调用init函数，最后执行具体的命令，如new，generate等</p>
+<h2 id="cli用到的模块"><a href="#cli用到的模块" class="headerlink" title="cli用到的模块"></a>cli用到的模块</h2><p>hexo-cli思路很简单，麻雀虽小五脏俱全，读它的源代码也很有意思。比较有收获的是了解了几个库的用法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var minimist = require(&apos;minimist&apos;);</span><br><span class="line">var abbrev = require(&apos;abbrev&apos;);</span><br><span class="line">var tildify = require(&apos;tildify&apos;);</span><br><span class="line">var chalk = require(&apos;chalk&apos;);</span><br></pre></td></tr></table></figure></p>
+<h3 id="minimist"><a href="#minimist" class="headerlink" title="minimist"></a>minimist</h3><p>minimist是命令行处理的组件，比如下面这个命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ init blog --verbose --cwd /usr/local/</span><br></pre></td></tr></table></figure></p>
+<p>会处理成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; _: [ &apos;init&apos;, &apos;blog&apos; ], verbose: true, cwd: &apos;/usr/local/&apos; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>以–开头的参数，会处理成key/value；其他的参数会以数组的形式保存。后续可以很容易地从中按顺序取出参数，或者判断某参数是否存在</p>
+<h3 id="abbrev"><a href="#abbrev" class="headerlink" title="abbrev"></a>abbrev</h3><p>abbrev也是个命令行处理组件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var commands = [&quot;generate&quot;, &quot;init&quot;, &quot;help&quot;];</span><br><span class="line">var shorthands = abbrev(commands);</span><br></pre></td></tr></table></figure></p>
+<p>会得到：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123; g: &apos;generate&apos;,</span><br><span class="line">  ge: &apos;generate&apos;,</span><br><span class="line">  gen: &apos;generate&apos;,</span><br><span class="line">  gene: &apos;generate&apos;,</span><br><span class="line">  gener: &apos;generate&apos;,</span><br><span class="line">  genera: &apos;generate&apos;,</span><br><span class="line">  generat: &apos;generate&apos;,</span><br><span class="line">  generate: &apos;generate&apos;,</span><br><span class="line">  h: &apos;help&apos;,</span><br><span class="line">  he: &apos;help&apos;,</span><br><span class="line">  hel: &apos;help&apos;,</span><br><span class="line">  help: &apos;help&apos;,</span><br><span class="line">  i: &apos;init&apos;,</span><br><span class="line">  in: &apos;init&apos;,</span><br><span class="line">  ini: &apos;init&apos;,</span><br><span class="line">  init: &apos;init&apos; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以方便用户输入命令</p>
+<h3 id="tildify"><a href="#tildify" class="headerlink" title="tildify"></a>tildify</h3><p>tildify可以把用户的目录处理成~<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var path = &quot;/Users/apple/git_local/&quot;;</span><br><span class="line">var short = tildify(path);// ~/git_local/</span><br></pre></td></tr></table></figure></p>
+<p>似乎没什么用</p>
+<h3 id="chalk"><a href="#chalk" class="headerlink" title="chalk"></a>chalk</h3><p>chalk可以给stdout增加文字特效，比如改变文字颜色，增加下划线等</p>
+<h1 id="Hexo执行"><a href="#Hexo执行" class="headerlink" title="Hexo执行"></a>Hexo执行</h1><h2 id="执行构造函数"><a href="#执行构造函数" class="headerlink" title="执行构造函数"></a>执行构造函数</h2><p>从hexo-cli的这行代码开始，转入hexo执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var Hexo = require(modulePath);</span><br><span class="line">hexo = new Hexo(path, args);</span><br></pre></td></tr></table></figure></p>
+<p>标准的javascript OO编程的惯例，设置了一大堆this.xxx = xxx，后续把这个实例作为参数传递，可以通过this.xxx取到实例变量</p>
+<p>这里跟插件机制有关的地方，是以下的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">var extend = require(&apos;../extend&apos;);</span><br><span class="line"></span><br><span class="line">this.extend = &#123;</span><br><span class="line">    console: new extend.Console(),</span><br><span class="line">    deployer: new extend.Deployer(),</span><br><span class="line">    filter: new extend.Filter(),</span><br><span class="line">    generator: new extend.Generator(),</span><br><span class="line">    helper: new extend.Helper(),</span><br><span class="line">    migrator: new extend.Migrator(),</span><br><span class="line">    processor: new extend.Processor(),</span><br><span class="line">    renderer: new extend.Renderer(),</span><br><span class="line">    tag: new extend.Tag()</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>这段代码的变量名取得不太好，容易误导。其实this.extend和extend是完全不同的东西</p>
+<p>extend是一个局部变量，extend.Console，extend.Generator等，是构造函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function Console()&#123;</span><br><span class="line">  this.store = &#123;&#125;;</span><br><span class="line">  this.alias = &#123;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Console.prototype.register = function(name, desc, options, fn)&#123;</span><br><span class="line">    // 注册插件的逻辑</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>而this.extend.console是用上述构造函数创建的实例，后续通过register函数来注册插件，它本身也是插件的容器，执行的时候从内部的store取出插件（通常是一个function）执行</p>
+<h2 id="执行init方法"><a href="#执行init方法" class="headerlink" title="执行init方法"></a>执行init方法</h2><p>接下来这行代码是核心，使hexo初始化，包括加载内部插件，外部插件，都是在init函数里完成的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo.init()</span><br></pre></td></tr></table></figure></p>
+<p>init函数的核心代码如下，省略了与插件机制无关的部分：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// Load internal plugins</span><br><span class="line">require(&apos;../plugins/console&apos;)(this);</span><br><span class="line">require(&apos;../plugins/filter&apos;)(this);</span><br><span class="line">require(&apos;../plugins/generator&apos;)(this);</span><br><span class="line">require(&apos;../plugins/helper&apos;)(this);</span><br><span class="line">require(&apos;../plugins/processor&apos;)(this);</span><br><span class="line">require(&apos;../plugins/renderer&apos;)(this);</span><br><span class="line">require(&apos;../plugins/tag&apos;)(this);</span><br><span class="line"></span><br><span class="line">// Load external plugins &amp; scripts</span><br><span class="line">require(&apos;./load_plugins&apos;)(this);</span><br></pre></td></tr></table></figure></p>
+<p>上述的代码是注册插件，包括hexo自带的核心内部插件，和开发者扩展的外部插件。具体注册的流程下面再说</p>
+<h2 id="执行具体命令"><a href="#执行具体命令" class="headerlink" title="执行具体命令"></a>执行具体命令</h2><p>hexo初始化之后，就开始执行具体命令，省略无关代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function runHexoCommand()&#123;</span><br><span class="line">    var cmd = args._.shift();</span><br><span class="line">    return hexo.call(cmd, args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意hexo就是前面实例化的hexo对象，call函数不是Function的call，而是hexo定义的call函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Hexo.prototype.call = function (name, args, callback) &#123;</span><br><span class="line">    // 调用插件，执行具体命令</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h1 id="注册插件"><a href="#注册插件" class="headerlink" title="注册插件"></a>注册插件</h1><p>插件分为内部插件和外部插件，内部插件是hexo自带的，外部插件是其他开发者的扩展</p>
+<h2 id="注册内部插件"><a href="#注册内部插件" class="headerlink" title="注册内部插件"></a>注册内部插件</h2><p>hexo已经提供了核心的插件，在plugins目录里，会注册到对应的模块上。比如console的插件，会注册到hexo.extend.console这个对象上，内部用store存储。</p>
+<p>另外，hexo的模块在extend目录里，针对不同的扩展点进行了分离。比如console模块的插件，是用hexo.extend.console注册的；generator模块的插件，是用hexo.extend.generator注册的。所以每个模块可以实现不同的注册逻辑，后续也有不同的执行逻辑</p>
+<p>以下是console模块注册插件的核心代码；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">module.exports = function(ctx)&#123;</span><br><span class="line"></span><br><span class="line">    var console = ctx.extend.console;</span><br><span class="line">    console.register(&apos;clean&apos;, &apos;Removed generated files and cache.&apos;, require(&apos;./clean&apos;));</span><br><span class="line">    </span><br><span class="line">    // 以下类似，省略</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>其中require(“./clean”)得到了一个function，hexo的插件最终都是一个个function，在特定的时机被调用。这里的this指的是hexo的实例，后面会说<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">module.exports = cleanConsole;</span><br><span class="line"></span><br><span class="line">function cleanConsole(args)&#123;</span><br><span class="line">  </span><br><span class="line">  return Promise.all([</span><br><span class="line">    deleteDatabase(this),</span><br><span class="line">    deletePublicDir(this)</span><br><span class="line">  ]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看下register代码的实现，省略了非核心的部分：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Console.prototype.register = function(name, desc, options, fn)&#123;</span><br><span class="line"></span><br><span class="line">    var c = this.store[name.toLowerCase()] = fn;</span><br><span class="line">    c.options = options;</span><br><span class="line">    c.desc = desc;</span><br><span class="line"></span><br><span class="line">    this.alias = abbrev(Object.keys(this.store));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>主要就是把插件保存在store里，同时用abbrev设置了一些shorthands</p>
+<h2 id="注册外部插件"><a href="#注册外部插件" class="headerlink" title="注册外部插件"></a>注册外部插件</h2><p>注册外部插件的代码在load_plugins.js里，外部插件指的是不在hexo核心里，通过npm install的扩展插件，命名规则是必须以hexo-开头。这样的module会被hexo框架识别为hexo外部插件，尝试加载<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">module.exports = function(ctx)&#123;</span><br><span class="line"></span><br><span class="line">    if (!ctx.env.init || ctx.env.safe)&#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125; </span><br><span class="line"></span><br><span class="line">    return Promise.all([</span><br><span class="line">        loadModules(ctx),</span><br><span class="line">        loadScripts(ctx)</span><br><span class="line">    ]);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>然后是loadModules函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">function loadModules(ctx)&#123;</span><br><span class="line"></span><br><span class="line">  var packagePath = pathFn.join(ctx.base_dir, &apos;package.json&apos;);</span><br><span class="line">  var pluginDir = ctx.plugin_dir;</span><br><span class="line"></span><br><span class="line">  // Make sure package.json exists</span><br><span class="line">  return fs.exists(packagePath).then(function(exist)&#123;</span><br><span class="line">    if (!exist) return [];</span><br><span class="line"></span><br><span class="line">    // Read package.json and find dependencies</span><br><span class="line">    return fs.readFile(packagePath).then(function(content)&#123;</span><br><span class="line">      var json = JSON.parse(content);</span><br><span class="line">      var deps = json.dependencies || &#123;&#125;;</span><br><span class="line"></span><br><span class="line">      return Object.keys(deps);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;).filter(function(name)&#123;</span><br><span class="line">    // Ignore plugins whose name is not started with &quot;hexo-&quot;</span><br><span class="line">    if (name.substring(0, 5) !== &apos;hexo-&apos;) return false;</span><br><span class="line"></span><br><span class="line">    // Make sure the plugin exists</span><br><span class="line">    var path = pathFn.join(pluginDir, name);</span><br><span class="line">    return fs.exists(path);</span><br><span class="line">  &#125;).map(function(name)&#123;</span><br><span class="line">    var path = require.resolve(pathFn.join(pluginDir, name));</span><br><span class="line"></span><br><span class="line">    // Load plugins</span><br><span class="line">    return ctx.loadPlugin(path).then(function()&#123;</span><br><span class="line">      ctx.log.debug(&apos;Plugin loaded: %s&apos;, chalk.magenta(name));</span><br><span class="line">    &#125;, function(err)&#123;</span><br><span class="line">      ctx.log.error(&#123;err: err&#125;, &apos;Plugin load failed: %s&apos;, chalk.magenta(name));</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从package.json的dependencies里找到所有hexo-开头的模块，然后在node-modules目录里找到对应的模块，将path作为参数调用loadPlugin函数</p>
+<p>然后是loadPlugin函数，真正的注册逻辑都在这个函数里：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">var Module = require(&apos;module&apos;);</span><br><span class="line">var vm = require(&apos;vm&apos;);</span><br><span class="line"></span><br><span class="line">Hexo.prototype.loadPlugin = function (path, callback) &#123;</span><br><span class="line"></span><br><span class="line">    var self = this;</span><br><span class="line"></span><br><span class="line">    return fs.readFile(path).then(function (script) &#123;</span><br><span class="line">        // Based on: https://github.com/joyent/node/blob/v0.10.33/src/node.js#L516</span><br><span class="line">        var module = new Module(path);</span><br><span class="line">        module.filename = path;</span><br><span class="line">        module.paths = Module._nodeModulePaths(path);</span><br><span class="line"></span><br><span class="line">        function require(path) &#123;</span><br><span class="line">            return module.require(path);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        require.resolve = function (request) &#123;</span><br><span class="line">            return Module._resolveFilename(request, module);</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        require.main = process.mainModule;</span><br><span class="line">        require.extensions = Module._extensions;</span><br><span class="line">        require.cache = Module._cache;</span><br><span class="line"></span><br><span class="line">        script = &apos;(function(exports, require, module, __filename, __dirname, hexo)&#123;&apos; +</span><br><span class="line">            script + &apos;&#125;);&apos;;</span><br><span class="line"></span><br><span class="line">        var fn = vm.runInThisContext(script, path);</span><br><span class="line"></span><br><span class="line">        return fn(module.exports, require, module, path, pathFn.dirname(path), self);</span><br><span class="line">    &#125;).nodeify(callback);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>上面这段代码有一个比较特别的地方，用到了node提供的Module和vm模块，这样通过hexo框架require的文件，都可以通过hexo变量访问到hexo的实例，从而能够访问hexo上的各种属性，如log，env等。这种做法很巧妙，令hexo的插件可以直接访问到hexo变量，又没有添加很多限制，值得学习</p>
+<p>最后用我写的一个CSDN migrator为例，看下外部插件的写法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hexo.extend.migrator.register(&apos;csdn&apos;, function(args)&#123;</span><br><span class="line"></span><br><span class="line">    var username = args._.shift();</span><br><span class="line">    </span><br><span class="line">    // 迁移逻辑</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>migrator插件需要注册到hexo.extend.migrator模块下。Hexo框架支持的扩展点已经设计好了，就是extend目录下的那几个，分别都有注册和调用的逻辑。第三方插件应该注册在哪个模块下，需要查看官方文档说明，才能被正确地注册上，以及在正确的时机被调用</p>
+<h1 id="调用插件"><a href="#调用插件" class="headerlink" title="调用插件"></a>调用插件</h1><p>所有插件的调用，都是从runHexoCommand开始的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function runHexoCommand()&#123;</span><br><span class="line">    var cmd = args._.shift();</span><br><span class="line">    return hexo.call(cmd, args);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>进入Hexo的call方法，这里不是Function的call方法，省略无关代码后，核心代码只有2行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Hexo.prototype.call = function (name, args, callback) &#123;</span><br><span class="line">    var c = self.extend.console.get(name);</span><br><span class="line">    c.call(this, args);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>根据用户输入的第一个命令，从hexo.extend.console中找到对应的console插件，并调用。以以下命令为例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo migrate csdn xxxxxx</span><br></pre></td></tr></table></figure></p>
+<p>首先会调用hexo.extend.console上的migrate插件，而migrate插件只是迁移的入口，它内部又会调用具体的migrator插件来完成逻辑。由于调用的形式一般是plugin.call(hexo, args)，所以插件内部的this一般来说指的都是hexo实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">var type = args._.shift();</span><br><span class="line"></span><br><span class="line">var migrators = this.extend.migrator.list();// 所有migrator插件</span><br><span class="line"></span><br><span class="line">// 没有找到，提示错误</span><br><span class="line">if(!migrators[type])&#123;</span><br><span class="line"></span><br><span class="line">    var help = &apos;&apos;;</span><br><span class="line"></span><br><span class="line">    help += type.magenta + &apos; migrator plugin is not installed.\n\n&apos;;</span><br><span class="line">    help += &apos;Installed migrator plugins:\n&apos;;</span><br><span class="line">    help += &apos;  &apos; + Object.keys(migrators).join(&apos;, &apos;) + &apos;\n\n&apos;;</span><br><span class="line">    help += &apos;For more help, you can check the online docs: &apos; + chalk.underline(&apos;http://hexo.io/&apos;);</span><br><span class="line"></span><br><span class="line">    console.log(help);</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// function.call</span><br><span class="line">return migrators[type].call(this, args);</span><br></pre></td></tr></table></figure></p>
+<p>再以clean为例，也是类似的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo clean</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function cleanConsole(args)&#123;</span><br><span class="line"></span><br><span class="line">    return Promise.all([</span><br><span class="line">        deleteDatabase(this),</span><br><span class="line">        deletePublicDir(this)</span><br><span class="line">    ]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>只是clean没有设计任何扩展点，所以内部就完成了所有清理逻辑，没有再调用其他的插件</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/14/微信OAuth总结/" rel="next" title="微信OAuth总结">
+                <i class="fa fa-chevron-left"></i> 微信OAuth总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/20/javascript几个知识点/" rel="prev" title="javascript几个知识点">
+                javascript几个知识点 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CLI启动"><span class="nav-number">1.</span> <span class="nav-text">CLI启动</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#启动脚本"><span class="nav-number">1.1.</span> <span class="nav-text">启动脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搜索路径，初始化Hexo"><span class="nav-number">1.2.</span> <span class="nav-text">搜索路径，初始化Hexo</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cli用到的模块"><span class="nav-number">1.3.</span> <span class="nav-text">cli用到的模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#minimist"><span class="nav-number">1.3.1.</span> <span class="nav-text">minimist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#abbrev"><span class="nav-number">1.3.2.</span> <span class="nav-text">abbrev</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tildify"><span class="nav-number">1.3.3.</span> <span class="nav-text">tildify</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#chalk"><span class="nav-number">1.3.4.</span> <span class="nav-text">chalk</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hexo执行"><span class="nav-number">2.</span> <span class="nav-text">Hexo执行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#执行构造函数"><span class="nav-number">2.1.</span> <span class="nav-text">执行构造函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行init方法"><span class="nav-number">2.2.</span> <span class="nav-text">执行init方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#执行具体命令"><span class="nav-number">2.3.</span> <span class="nav-text">执行具体命令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注册插件"><span class="nav-number">3.</span> <span class="nav-text">注册插件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#注册内部插件"><span class="nav-number">3.1.</span> <span class="nav-text">注册内部插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注册外部插件"><span class="nav-number">3.2.</span> <span class="nav-text">注册外部插件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调用插件"><span class="nav-number">4.</span> <span class="nav-text">调用插件</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

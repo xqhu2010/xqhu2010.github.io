@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近看tomcat源码，里面有好多System.getProperty()的调用。关于这个方法，以前都没注意过，今天学习了一下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="System.getProperty">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/System.getProperty/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="最近看tomcat源码，里面有好多System.getProperty()的调用。关于这个方法，以前都没注意过，今天学习了一下">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0075/8404/0bc2b2b3-619f-3904-94eb-411840b53542.png">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="System.getProperty">
+<meta name="twitter:description" content="最近看tomcat源码，里面有好多System.getProperty()的调用。关于这个方法，以前都没注意过，今天学习了一下">
+<meta name="twitter:image" content="http://dl.iteye.com/upload/attachment/0075/8404/0bc2b2b3-619f-3904-94eb-411840b53542.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/System.getProperty/"/>
+
+
+
+
+
+  <title>System.getProperty | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/System.getProperty/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">System.getProperty</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:14:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近看tomcat源码，里面有好多System.getProperty()的调用。关于这个方法，以前都没注意过，今天学习了一下<br><a id="more"></a></p>
+<p>在jdk源码里的注释就说得很清楚了，但我不知道过期没过期，发现jdk里很多注释和代码都不匹配，有的代码更新了，注释还是旧的 </p>
+<h1 id="汇总"><a href="#汇总" class="headerlink" title="汇总"></a>汇总</h1><p>网上也有一些汇总，可读性更好</p>
+<p>| <em>属性</em> | <em>含义</em> |<br>| java.version | java版本 |<br>| java.vendor | java提供商 |<br>| java.vendor.url | java提供商链接 |<br>| java.home | java安装目录 |<br>| java.vm.specification.version | java虚拟机规范版本 |<br>| java.vm.specification.vendor | java虚拟机规范提供商 |<br>| java.vm.specification.name | java虚拟机规范名称 |<br>| java.vm.version | java虚拟机版本 |<br>| java.vm.vendor | java虚拟机提供商 |<br>| java.vm.name | java虚拟机名称 |<br>| java.specification.version | java规范版本 |<br>| java.specification.vendor | java规范提供商 |<br>| java.specification.name | java规范名称 |<br>| java.class.version | java类格式版本号 |<br>| java.class.path | java类路径 |<br>| java.library.path | 加载库时搜索的路径列表 |<br>| java.io.tmpdir | 临时io目录 |<br>| java.compiler | JIT编译器名称 |<br>| java.ext.dirs | 扩展目录 |<br>| os.name | 操作系统名称 |<br>| os.arch | 操作系统架构 |<br>| os.version | 操作系统版本 |<br>| file.separator | 文件分隔符 |<br>| path.separator | 路径分隔符 |<br>| line.separator | 换行符 |<br>| user.name | 用户名 |<br>| user.home | 用户主目录 |<br>| user.dir | 用户当前目录 |</p>
+<h1 id="查看系统变量的代码"><a href="#查看系统变量的代码" class="headerlink" title="查看系统变量的代码"></a>查看系统变量的代码</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">		String[] keys = new String[] &#123; &quot;java.version&quot;, &quot;java.vendor&quot;,</span><br><span class="line">				&quot;java.vendor.url&quot;, &quot;java.home&quot;,</span><br><span class="line">				&quot;java.vm.specification.version&quot;,</span><br><span class="line">				&quot;java.vm.specification.vendor&quot;, &quot;java.vm.specification.name&quot;,</span><br><span class="line">				&quot;java.vm.version&quot;, &quot;java.vm.vendor&quot;, &quot;java.vm.name&quot;,</span><br><span class="line">				&quot;java.specification.version&quot;, &quot;java.specification.vendor&quot;,</span><br><span class="line">				&quot;java.specification.name&quot;, &quot;java.class.version&quot;,</span><br><span class="line">				&quot;java.class.path&quot;, &quot;java.library.path&quot;, &quot;java.io.tmpdir&quot;,</span><br><span class="line">				&quot;java.compiler&quot;, &quot;java.ext.dirs&quot;, &quot;os.name&quot;, &quot;os.arch&quot;,</span><br><span class="line">				&quot;os.version&quot;, &quot;file.separator&quot;, &quot;path.separator&quot;,</span><br><span class="line">				&quot;line.separator&quot;, &quot;user.name&quot;, &quot;user.home&quot;, &quot;user.dir&quot; &#125;;</span><br><span class="line"></span><br><span class="line">		int size = keys.length;</span><br><span class="line"></span><br><span class="line">		for (int i = 0; i &lt; size; i++) &#123;</span><br><span class="line">			System.out.println(keys[i] + &quot;: &quot; + System.getProperty(keys[i]));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="临时系统变量"><a href="#临时系统变量" class="headerlink" title="临时系统变量"></a>临时系统变量</h1><p>除了上述的28个系统变量之外，在启动java程序时，也可以用-D，增加临时的系统变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">		String tempProperty = &quot;hero.name&quot;;</span><br><span class="line">		System.out.println(System.getProperty(tempProperty));</span><br><span class="line"></span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>执行效果：</p>
+<p><img src="http://dl.iteye.com/upload/attachment/0075/8404/0bc2b2b3-619f-3904-94eb-411840b53542.png" alt=""></p>
+<h1 id="区分environment-properties"><a href="#区分environment-properties" class="headerlink" title="区分environment properties"></a>区分environment properties</h1><p>以前一直都混淆了system properties和environment properties</p>
+<h2 id="system-properties指的是JVM-system"><a href="#system-properties指的是JVM-system" class="headerlink" title="system properties指的是JVM system"></a>system properties指的是JVM system</h2><p>通过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.getProperty(key);</span><br></pre></td></tr></table></figure>
+<p>来获取 </p>
+<p>而设置的方法主要有3种： </p>
+<p>第一种是JVM内置的，包括java.vm.version等</p>
+<p>第二种是在启动时，通过-D参数设置的 </p>
+<p>第三种则是通过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.setProperty(key, value);</span><br></pre></td></tr></table></figure>
+<p>来设置 </p>
+<h2 id="environment-properties指的是操作系统"><a href="#environment-properties指的是操作系统" class="headerlink" title="environment properties指的是操作系统"></a>environment properties指的是操作系统</h2><p>获取这种参数的方法是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.getenv();</span><br></pre></td></tr></table></figure>
+<p>在操作系统里设置的环境变量，可以通过这个方法取到 </p>
+<p>通过以下代码，可以取到全集</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, String&gt; env = System.getenv();</span><br><span class="line"></span><br><span class="line">		Set&lt;String&gt; keys = env.keySet();</span><br><span class="line"></span><br><span class="line">		for (String key : keys) &#123;</span><br><span class="line">			System.out.println(key);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/下载tomcat时的一个细节问题/" rel="next" title="下载tomcat时的一个细节问题">
+                <i class="fa fa-chevron-left"></i> 下载tomcat时的一个细节问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/REMEDY架构思路/" rel="prev" title="REMEDY架构思路">
+                REMEDY架构思路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#汇总"><span class="nav-number">1.</span> <span class="nav-text">汇总</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#查看系统变量的代码"><span class="nav-number">2.</span> <span class="nav-text">查看系统变量的代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#临时系统变量"><span class="nav-number">3.</span> <span class="nav-text">临时系统变量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#区分environment-properties"><span class="nav-number">4.</span> <span class="nav-text">区分environment properties</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#system-properties指的是JVM-system"><span class="nav-number">4.1.</span> <span class="nav-text">system properties指的是JVM system</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#environment-properties指的是操作系统"><span class="nav-number">4.2.</span> <span class="nav-text">environment properties指的是操作系统</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

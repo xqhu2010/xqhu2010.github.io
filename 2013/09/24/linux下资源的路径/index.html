@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="为了给自己添堵，我把一台笔记本的开发环境装成linux了，希望督促自己熟悉linux。可是我刚才发现在linux下，用java加载资源文件和在windows下还不一样，正好总结一下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux下资源的路径">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/linux下资源的路径/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="为了给自己添堵，我把一台笔记本的开发环境装成linux了，希望督促自己熟悉linux。可是我刚才发现在linux下，用java加载资源文件和在windows下还不一样，正好总结一下">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="linux下资源的路径">
+<meta name="twitter:description" content="为了给自己添堵，我把一台笔记本的开发环境装成linux了，希望督促自己熟悉linux。可是我刚才发现在linux下，用java加载资源文件和在windows下还不一样，正好总结一下">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/linux下资源的路径/"/>
+
+
+
+
+
+  <title>linux下资源的路径 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/linux下资源的路径/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">linux下资源的路径</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:15:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>为了给自己添堵，我把一台笔记本的开发环境装成linux了，希望督促自己熟悉linux。可是我刚才发现在linux下，用java加载资源文件和在windows下还不一样，正好总结一下<br><a id="more"></a></p>
+<h1 id="windows和linux的区别"><a href="#windows和linux的区别" class="headerlink" title="windows和linux的区别"></a>windows和linux的区别</h1><p>在windows环境，假设在eclipse里建一个工程helloworld，我一般会把配置文件，比如spring.xml、logback.xml什么的都放在src目录下面，然后用下面的代码就能加载到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">File file = new File(&quot;spring.xml&quot;);</span><br></pre></td></tr></table></figure>
+<p>可是在linux环境，用上面的路径是加载不到的，必须要把文件放在helloworld目录下才可以 </p>
+<p>针对这个问题，上网搜索了好久，这里总结一下。定位资源有2种方式，一种是file system，另一种是classpath</p>
+<h1 id="file-system定位"><a href="#file-system定位" class="headerlink" title="file system定位"></a>file system定位</h1><p>这种比较简单，有2种情况</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">File file = new File(&quot;abc.txt&quot;);</span><br><span class="line"></span><br><span class="line">File file = new File(&quot;/abc.txt&quot;);</span><br></pre></td></tr></table></figure>
+<p>第一种是相对路径；第二种是绝对路径 </p>
+<p>绝对路径比较简单，在linux下就是/目录。但是绝对路径虽然很方便定位路径，但是完全不实用，因为基本上换个部署环境，绝对路径定位就不好使了 </p>
+<p>相对路径是从“工作目录”算起，所谓的“工作目录”，就是“执行java命令的目录” </p>
+<p>比如说例子里的这个代码，如果在eclipse里执行的话，eclipse会在项目的根目录helloworld下执行java命令，所以这里的file路径就是/home/username/workspace/helloworld/abc.txt </p>
+<p>如果在命令行里自己随便找个目录去执行，比如在/opt下执行java -cp /home/username/workspace/helloworld/bin xxx.xxx.xxx，那这个file的路径就变成了/opt/abc.txt </p>
+<p>这个相对路径也不太靠谱，因为会随着执行java命令的目录不同而改变 </p>
+<h1 id="classpath定位"><a href="#classpath定位" class="headerlink" title="classpath定位"></a>classpath定位</h1><p>个人感觉，classpath定位就要好多了。因为配置文件往往是和代码一起部署的，相对位置一般也比较确定，不会因为安装目录变化，操作系统变化就改变。所以根据classpath来定位资源，我觉得是比较好的，下面举个例子 </p>
+<h2 id="路径"><a href="#路径" class="headerlink" title="路径"></a>路径</h2><p>classpath是/home/username/workspace/helloworld/bin/classes </p>
+<p>有一个类的FQCN是net.kyfxbl.test.Main </p>
+<p>在/home/username/workspace/helloworld/bin/classes下有一个111.test文件 </p>
+<p>在/home/username/workspace/helloworld/bin/classes/net/kyfxbl/test下有一个222.test文件 </p>
+<p>现在通过classpath定位的方式，在Main这个类中把111.test和222.test给定位到。不管这个项目部署在哪里，只要上面说的目录结构不变就不影响 </p>
+<h2 id="加载111-test"><a href="#加载111-test" class="headerlink" title="加载111.test"></a>加载111.test</h2><p>111.test是在classpath的根目录下，有2种办法都能加载到它</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Main.class.getResourceAsStream(&quot;/111.test&quot;);</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Main.class.getClassLoader().getResourceAsStream(&quot;111.test&quot;);</span><br></pre></td></tr></table></figure>
+<p>Main.class.getResourceAsStream()方法是从这个类的包路径开始加载，而111.test是在classpath根路径下，所以要用这个方法加载的话，就需要在111.test前面加上”/“ </p>
+<p>Main.class.getClassLoader().getResourceAsStream()方法是从classpath根路径开始加载，所以直接写”111.test”就行了 </p>
+<h2 id="加载222-test"><a href="#加载222-test" class="headerlink" title="加载222.test"></a>加载222.test</h2><p>222.test在Main类的包路径下，也有2种方法能加载它</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Main.class.getResourceAsStream(&quot;222.test&quot;);</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Main.class.getClassLoader().getResourceAsStream(&quot;net/kyfxbl/test/222.test&quot;);</span><br></pre></td></tr></table></figure>
+<p>和上面的例子正好是相反的，就不重复解释了 </p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>1、加载文件有file system定位和classpath定位2种方式，我觉得classpath定位是更好的 </p>
+<p>2、不管哪种定位方式，其实都有绝对路径和相对路径的区别。只是classpath定位方式，根目录是确定的，就是classpath；而file system定位方式，根目录不确定，这也是最大的问题 </p>
+<h1 id="几个关键的概念"><a href="#几个关键的概念" class="headerlink" title="几个关键的概念"></a>几个关键的概念</h1><p>以下是几个关键的概念</p>
+<h2 id="classpath"><a href="#classpath" class="headerlink" title="classpath"></a>classpath</h2><p>类加载的根目录，一般就是project/bin，或者project/target/classes等。在tomcat里是WEB-INF/classes，和WEB-INF/lib </p>
+<h2 id="包路径"><a href="#包路径" class="headerlink" title="包路径"></a>包路径</h2><p>就是classpath之下的子目录，比如一个abc.def.Main的类，其包路径是classpath/abc/def </p>
+<h2 id="工作目录"><a href="#工作目录" class="headerlink" title="工作目录"></a>工作目录</h2><p>这个是给file system用的，就是执行java命令的目录，跟实现有关。但是在eclipse里，一般就是project根目录 </p>
+<h2 id="绝对路径和相对路径"><a href="#绝对路径和相对路径" class="headerlink" title="绝对路径和相对路径"></a>绝对路径和相对路径</h2><p>在classpath定位和file system定位中都有的概念，以”/“打头的是绝对路径，会从根目录开始找；不以”/“打头的就是相对路径，会从当前目录开始找</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/java社区主要的开源组织/" rel="next" title="java社区主要的开源组织">
+                <i class="fa fa-chevron-left"></i> java社区主要的开源组织
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/chrome extension例子/" rel="prev" title="chrome extension例子">
+                chrome extension例子 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#windows和linux的区别"><span class="nav-number">1.</span> <span class="nav-text">windows和linux的区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#file-system定位"><span class="nav-number">2.</span> <span class="nav-text">file system定位</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#classpath定位"><span class="nav-number">3.</span> <span class="nav-text">classpath定位</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#路径"><span class="nav-number">3.1.</span> <span class="nav-text">路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载111-test"><span class="nav-number">3.2.</span> <span class="nav-text">加载111.test</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加载222-test"><span class="nav-number">3.3.</span> <span class="nav-text">加载222.test</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#几个关键的概念"><span class="nav-number">5.</span> <span class="nav-text">几个关键的概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#classpath"><span class="nav-number">5.1.</span> <span class="nav-text">classpath</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包路径"><span class="nav-number">5.2.</span> <span class="nav-text">包路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作目录"><span class="nav-number">5.3.</span> <span class="nav-text">工作目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绝对路径和相对路径"><span class="nav-number">5.4.</span> <span class="nav-text">绝对路径和相对路径</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="复习一下java io的相关基础知识">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java io基础知识">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/java io基础知识/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="复习一下java io的相关基础知识">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java io基础知识">
+<meta name="twitter:description" content="复习一下java io的相关基础知识">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/java io基础知识/"/>
+
+
+
+
+
+  <title>java io基础知识 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/java io基础知识/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java io基础知识</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:15:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>复习一下java io的相关基础知识<br><a id="more"></a></p>
+<h1 id="char数组、String、byte数组转换"><a href="#char数组、String、byte数组转换" class="headerlink" title="char数组、String、byte数组转换"></a>char数组、String、byte数组转换</h1><p>首先需要清楚java中这3种类型的区别：</p>
+<p>byte是字节，byte[]是字节数组，是字符在计算机中的实际存储。字节如何转换成字符，要看用什么编码。比如用utf-8编码，3个字节对应1个中文字符<br>char是字符，char[]是字符数组，其实也就是字符串<br>String本质上就是char[]。char[]和String之间的转换，不需要指定编码 </p>
+<h2 id="从char-转换成String"><a href="#从char-转换成String" class="headerlink" title="从char[]转换成String"></a>从char[]转换成String</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">char[] c = new char[] &#123; 0x5c71,0x4456,0x1234 &#125;;</span><br><span class="line">String s = new String(c);</span><br></pre></td></tr></table></figure>
+<h2 id="从String转换成char"><a href="#从String转换成char" class="headerlink" title="从String转换成char[]"></a>从String转换成char[]</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String s = &quot;这是一个字符串&quot;;</span><br><span class="line">char[] c = s.toCharArray();</span><br></pre></td></tr></table></figure>
+<h2 id="从byte-转换成String"><a href="#从byte-转换成String" class="headerlink" title="从byte[]转换成String"></a>从byte[]转换成String</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">byte[] b = getBytes();// 某个方法返回了byte[]</span><br><span class="line">String s = new String(b, &quot;UTF-8&quot;);</span><br></pre></td></tr></table></figure>
+<h2 id="从String转换成byte"><a href="#从String转换成byte" class="headerlink" title="从String转换成byte[]"></a>从String转换成byte[]</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String s = &quot;这个一个字符串&quot;;</span><br><span class="line">byte[] b = s.getBytes(Charset.forName(&quot;UTF-8&quot;));</span><br></pre></td></tr></table></figure>
+<h2 id="byte-和char-转换"><a href="#byte-和char-转换" class="headerlink" title="byte[]和char[]转换"></a>byte[]和char[]转换</h2><p>byte[]和char[]之间，不知道用什么方法可以直接转，一般用String作为过渡 </p>
+<p>可以用一句话总结：<span style="color: red;">“字符编码就变成字节;字节解码就变成字符”</span> </p>
+<h1 id="BIO常用API简介"><a href="#BIO常用API简介" class="headerlink" title="BIO常用API简介"></a>BIO常用API简介</h1><p>本文不涉及NIO，只总结BIO的常用API </p>
+<p>JAVA IO主要有2套基本的API，一套用于读写字节；另一套用于读写字符，可以认为是前者的快捷方式 </p>
+<p>读写字节的基本接口是InputStream和OutputStream，InputStream从输入流中读出字节，读出后需要选择编码方式进行decode;OutputStream往输出流中写入字节，写入前需要选择编码方式进行encode </p>
+<p>读写字符的基本接口是InputStreamReader和OutputStreamWriter，InputStreamReader从输入流中读出字符;OutputStreamWriter往输出流中写入字符。编码方式在创建实例的时候已经指定了 </p>
+<h2 id="写数据的例子"><a href="#写数据的例子" class="headerlink" title="写数据的例子"></a>写数据的例子</h2><p>OutputStream的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String file = &quot;/home/xxx/fortest.txt&quot;;</span><br><span class="line">String charset = &quot;UTF-8&quot;;</span><br><span class="line"></span><br><span class="line">FileOutputStream fos = new FileOutputStream(file);</span><br><span class="line">fos.write(&quot;這是要保存的中文字符串&quot;.getBytes(charset));</span><br><span class="line">fos.close();</span><br></pre></td></tr></table></figure>
+<p>这里调用了基本的write(byte[])方法，将一个字符串编码后，写到文件里 </p>
+<p>用针对字符的OutputStreamWriter的话，可以省去自行编码的步骤：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">String file = &quot;/home/xxx/fortest.txt&quot;;</span><br><span class="line">String charset = &quot;UTF-8&quot;;</span><br><span class="line"></span><br><span class="line">FileOutputStream fos = new FileOutputStream(file);</span><br><span class="line">OutputStreamWriter writer = new OutputStreamWriter(fos,charset);</span><br><span class="line">writer.write(&quot;这是要保存的中文字符串&quot;);</span><br><span class="line">writer.close();</span><br></pre></td></tr></table></figure>
+<p>可以看到，调用write()方法时，不需要再调用getBytes()方法，因为在创建OutputStreamWriter的时候，已经指定了编码 </p>
+<h2 id="读数据的例子"><a href="#读数据的例子" class="headerlink" title="读数据的例子"></a>读数据的例子</h2><p>前面2个是写的例子，比较简单，读要稍微麻烦一点 </p>
+<p>下面是InputStream的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">FileInputStream fis = new FileInputStream(file);</span><br><span class="line"></span><br><span class="line">StringBuilder sb = new StringBuilder();</span><br><span class="line">byte[] buffer = new byte[68];// 这行代码有BUG</span><br><span class="line"></span><br><span class="line">int count = 0;</span><br><span class="line"></span><br><span class="line">while ((count = fis.read(buffer)) != -1) &#123;</span><br><span class="line">    sb.append(new String(buffer, 0, count, charset));</span><br><span class="line">&#125;</span><br><span class="line">fis.close();</span><br><span class="line"></span><br><span class="line">System.out.println(sb.toString());</span><br></pre></td></tr></table></figure>
+<p>这里的read方法是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">read(byte[] b)</span><br></pre></td></tr></table></figure></p>
+<p>会将读取到的内容写到字节数组b里，并返回此次读取的字节数。如果已经读完，则返回-1;此外还有一个重载方法read()，一次只读一个字节，返回的是读取到的字节内容。前者是比较常用的。（所以我觉得JDK这里的设计不太好，重载的方法，返回值的含义却完全不同，很容易造成误导） </p>
+<p>这个例子主要就是从InputStream中循环读取字节，然后decode为String。这里定义了一个count变量，String的构造方法也比较特殊。是因为最后一次读取时，往往不会读到字节数组的容量上限的内容，只有从0到count-1的内容才是最后一次读取的实际字节。所以需要用这个不常用的构造方法，把从count到size-1的部分排除掉 </p>
+<p>但是这个方法有一个bug，就是定义byte[]那一行。如果定义的byte[]容量够大的话，一次性把输入流里的字节全部读出来了，那就没有问题;但是只要输入流一大，一般都会分若干次读取，那么就非常容易截断，造成decode失败。比如aa bb cc dd ee ff，前3个字节aa bb cc可以decode成一个字符，后3个字节dd ee ff可以decode成另一个字符。但是有可能aa bb cc dd先读出来，ee ff在下一个循环才读出来，那decode后就会形成乱码 </p>
+<p>所以读字符的话，一般用InputStreamWriter会好一点，可以避免这个问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">FileInputStream fis = new FileInputStream(file);</span><br><span class="line">InputStreamReader reader = new InputStreamReader(fis, charset);</span><br><span class="line"></span><br><span class="line">StringBuffer sb = new StringBuffer();</span><br><span class="line">char[] buf = new char[64];</span><br><span class="line"></span><br><span class="line">int count = 0;</span><br><span class="line"></span><br><span class="line">while ((count = reader.read(buf)) != -1) &#123;</span><br><span class="line">    sb.append(buf,0,count);// 截取掉buf中，最后一次循环的冗余部分</span><br><span class="line">    // sb.append(buf);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">reader.close();</span><br><span class="line">System.out.println(sb.toString());</span><br></pre></td></tr></table></figure>
+<p>和上面的例子很相像，区别在于定义的是char[]数组，而不是byte[]数组。在调用InputStreamReader类的read()方法时，已经将字节decode为字符了，所以不会出现InputStream中字节错误截断的问题 </p>
+<p>调用StringBuffer的append()方法时，同样要注意截取掉最后一次循环中的冗余数据，这个和上一个例子是一样的</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/classloader简介/" rel="next" title="classloader简介">
+                <i class="fa fa-chevron-left"></i> classloader简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/松鼠书读书笔记（一）——HTTP概述/" rel="prev" title="松鼠书读书笔记（一）——HTTP概述">
+                松鼠书读书笔记（一）——HTTP概述 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#char数组、String、byte数组转换"><span class="nav-number">1.</span> <span class="nav-text">char数组、String、byte数组转换</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从char-转换成String"><span class="nav-number">1.1.</span> <span class="nav-text">从char[]转换成String</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从String转换成char"><span class="nav-number">1.2.</span> <span class="nav-text">从String转换成char[]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从byte-转换成String"><span class="nav-number">1.3.</span> <span class="nav-text">从byte[]转换成String</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从String转换成byte"><span class="nav-number">1.4.</span> <span class="nav-text">从String转换成byte[]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#byte-和char-转换"><span class="nav-number">1.5.</span> <span class="nav-text">byte[]和char[]转换</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BIO常用API简介"><span class="nav-number">2.</span> <span class="nav-text">BIO常用API简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#写数据的例子"><span class="nav-number">2.1.</span> <span class="nav-text">写数据的例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#读数据的例子"><span class="nav-number">2.2.</span> <span class="nav-text">读数据的例子</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="css的一些学习笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="css笔记">
+<meta property="og:url" content="http://yoursite.com/2014/04/24/css笔记/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="css的一些学习笔记">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="css笔记">
+<meta name="twitter:description" content="css的一些学习笔记">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2014/04/24/css笔记/"/>
+
+
+
+
+
+  <title>css笔记 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/04/24/css笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">css笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-04-24T21:23:00+09:00">
+                2014-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web/" itemprop="url" rel="index">
+                    <span itemprop="name">web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>css的一些学习笔记<br><a id="more"></a></p>
+<h1 id="文档流和盒子模型"><a href="#文档流和盒子模型" class="headerlink" title="文档流和盒子模型"></a>文档流和盒子模型</h1><p>1、html文档流，默认从上往下，从左往右地解析</p>
+<p>2、DOM由各种盒子组成，大致上分为block盒子和span盒子</p>
+<p>block默认会把宽度撑满自己的父元素；span盒子正好相反，会尽量把宽度缩紧到刚好够包裹内容</p>
+<p>盒子的width由4个部分组成：content，padding，border，margin</p>
+<p>3、css选择器，主要有3种，基于文档结构，基于id和class，基于property</p>
+<h1 id="集中常见的模式"><a href="#集中常见的模式" class="headerlink" title="集中常见的模式"></a>集中常见的模式</h1><p>列举了一些常见的模式</p>
+<h2 id="文本垂直居中"><a href="#文本垂直居中" class="headerlink" title="文本垂直居中"></a>文本垂直居中</h2><p>对于行内元素，height会自动收缩到包裹住文本的高度，所以不存在这个问题。但是对于block和inline-block等盒子元素，如果设置了height属性，则文本默认会在上方显示。如果希望文本在垂直方向上居中，可以设置line-height属性等于height属性，或者大于height属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    hello world</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">div &#123;</span><br><span class="line">    height: 200px;</span><br><span class="line">    line-height: 200px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="文本水平居中，图标分列左右两侧"><a href="#文本水平居中，图标分列左右两侧" class="headerlink" title="文本水平居中，图标分列左右两侧"></a>文本水平居中，图标分列左右两侧</h2><p>效果是左侧一个小箭头，右侧一个小箭头，日期显示在中间</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;wrapper&quot;&gt;</span><br><span class="line">    &lt;span&gt;&lt;&lt;/span&gt;</span><br><span class="line">    &lt;span&gt;2014年5月11日&lt;/span&gt;</span><br><span class="line">    &lt;span&gt;&gt;&lt;/span&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#wrapper&#123;</span><br><span class="line">    text-align: center;</span><br><span class="line">    position: relative;</span><br><span class="line">    width: 200px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#wrapper &gt; span:first-child&#123;</span><br><span class="line">    float: left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#wrapper &gt; span:last-child&#123;</span><br><span class="line">    float: right;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果给2个float元素设置width（比如为了增大点击区域的目的），则width应该设置成一样，否则会破坏日期水平居中的效果</p>
+<h2 id="为float元素设置width"><a href="#为float元素设置width" class="headerlink" title="为float元素设置width"></a>为float元素设置width</h2><p>一般来说，行内元素（如span），会自动收缩以适应文本宽度，为其设置width属性是无效的。但是当span元素被float了之后，就可以为其设置width属性了</p>
+<h2 id="盒子有多大"><a href="#盒子有多大" class="headerlink" title="盒子有多大"></a>盒子有多大</h2><p>对于块元素，如block和inline-block，如果不设置其width，则会自动扩展到父容器的宽度。此时设置它的padding和border，不会改变盒子的大小（还是和父容器一样宽），但是会缩小content的宽度</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;parent&quot;&gt;</span><br><span class="line">    &lt;div id=&quot;son&quot;&gt;abc&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#parent &#123;</span><br><span class="line">    widht: 200px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#son &#123;</span><br><span class="line">    padding: 1px;</span><br><span class="line">    border: 1px solid black;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>son的width自动扩展到200px，然后由于padding和border占了4px，内容区域就是196px</p>
+<p>如果设置了son的width，实际上设置的是content的width，加上border和padding后，实际的宽度会超过父容器</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#son &#123;</span><br><span class="line">    width: 200px;</span><br><span class="line">    padding: 1px;</span><br><span class="line">    border: 1px solid black;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>content的宽度是200px，加上border和padding的4px，最后盒子的宽度是204px</p>
+<p>但是，如果设置box-sizing为border-box，则设置的width就变成了整个盒子的宽度，此时再设置border和padding，又会缩小content的宽度了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#son &#123;</span><br><span class="line">    box-sizing: border-box;</span><br><span class="line">    width: 200px;</span><br><span class="line">    padding: 1px;</span><br><span class="line">    border: 1px solid black;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>实践中，在全局设置box-sizing为border-box挺不错的，这样设置padding和border时，就不用担心造成盒子宽度的变化了</p>
+<h2 id="水平排放li"><a href="#水平排放li" class="headerlink" title="水平排放li"></a>水平排放li</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;ul&gt;</span><br><span class="line">    &lt;li&gt;1&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;2&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;3&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;4&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;5&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ul&#123;</span><br><span class="line">    font-size: 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">li&#123;</span><br><span class="line">    font-size: 1rem;</span><br><span class="line">    display: inline-block;</span><br><span class="line">    width: 20%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的一个技巧是设置ul的font-size为0，因为和<li>之间有空隙，在大部分浏览器上都会造成1px的间隙，造成一行无法容纳5个li，于是最后一个li元素就会掉到下一行。因此把ul的font-size设置成0，在li中再恢复，可以避免此1px问题。用inline-block方式实现水平布局，大多都会有这个问题</li></p>
+<h2 id="N列固定比例水平布局"><a href="#N列固定比例水平布局" class="headerlink" title="N列固定比例水平布局"></a>N列固定比例水平布局</h2><p>有点类似上面的li平铺</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;nav&gt;&lt;/nav&gt;</span><br><span class="line">    &lt;div&gt;&lt;/div&gt;</span><br><span class="line">    &lt;aside&gt;&lt;/aside&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">div &#123;</span><br><span class="line">    font-size: 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">div &gt; * &#123;</span><br><span class="line">    display: inline-block;</span><br><span class="line">    font-size: 1rem;</span><br><span class="line">    vertical-align: top;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">div &gt; nav &#123;</span><br><span class="line">    width: 30%;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">div &gt; div &#123;</span><br><span class="line">    width: 50%;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">div &gt; aside &#123;</span><br><span class="line">    width: 20%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>基本上和li平铺的模式完全一样，区别是设置所有的子元素vertical-align: top。否则当各子元素的高度不一致时，看起来似乎没有在同一行。其实用dev tools可以看出来，3个子元素还是在同一行，只是在垂直方向上没有对齐，设置vertical-align可以解决此问题</p>
+<h2 id="某些列宽度固定，其他列宽度比例固定的水平布局"><a href="#某些列宽度固定，其他列宽度比例固定的水平布局" class="headerlink" title="某些列宽度固定，其他列宽度比例固定的水平布局"></a>某些列宽度固定，其他列宽度比例固定的水平布局</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;nav&gt;&lt;/nav&gt;</span><br><span class="line">    &lt;div&gt;&lt;/div&gt;</span><br><span class="line">    &lt;aside&gt;&lt;/aside&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">div &#123;</span><br><span class="line">    display: -webkit-box;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">div &gt; nav &#123;</span><br><span class="line">    width: 200px;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">div &gt; div &#123;</span><br><span class="line">    -webkit-box-flex: 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">div &gt; aside &#123;</span><br><span class="line">    -webkit-box-flex: 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>优点是不会出现1px问题，也不需要设置子元素为inline-block，很方便。另外，设置display: box之后，子元素会自动变成等高。这在某些场景下很方便，但是也不适用于另外一些场景。最后display: box，在老的浏览器上支持不好，所以这种方式没有老技巧那么通用。但是随着浏览器日趋标准，我觉得慢慢就不是问题了</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/03/21/nohup及重定向/" rel="next" title="nohup及重定向">
+                <i class="fa fa-chevron-left"></i> nohup及重定向
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/05/06/js常用的日期API/" rel="prev" title="js常用的日期API">
+                js常用的日期API <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文档流和盒子模型"><span class="nav-number">1.</span> <span class="nav-text">文档流和盒子模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集中常见的模式"><span class="nav-number">2.</span> <span class="nav-text">集中常见的模式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#文本垂直居中"><span class="nav-number">2.1.</span> <span class="nav-text">文本垂直居中</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本水平居中，图标分列左右两侧"><span class="nav-number">2.2.</span> <span class="nav-text">文本水平居中，图标分列左右两侧</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为float元素设置width"><span class="nav-number">2.3.</span> <span class="nav-text">为float元素设置width</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#盒子有多大"><span class="nav-number">2.4.</span> <span class="nav-text">盒子有多大</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#水平排放li"><span class="nav-number">2.5.</span> <span class="nav-text">水平排放li</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#N列固定比例水平布局"><span class="nav-number">2.6.</span> <span class="nav-text">N列固定比例水平布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#某些列宽度固定，其他列宽度比例固定的水平布局"><span class="nav-number">2.7.</span> <span class="nav-text">某些列宽度固定，其他列宽度比例固定的水平布局</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

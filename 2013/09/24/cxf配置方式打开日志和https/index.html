@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文介绍通过配置方式打开cxf的日志和https功能。用编码方式也可以实现，但是就存在代码重复的问题，用配置方式会比较好">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cxf配置方式打开日志和https">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/cxf配置方式打开日志和https/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="本文介绍通过配置方式打开cxf的日志和https功能。用编码方式也可以实现，但是就存在代码重复的问题，用配置方式会比较好">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="cxf配置方式打开日志和https">
+<meta name="twitter:description" content="本文介绍通过配置方式打开cxf的日志和https功能。用编码方式也可以实现，但是就存在代码重复的问题，用配置方式会比较好">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/cxf配置方式打开日志和https/"/>
+
+
+
+
+
+  <title>cxf配置方式打开日志和https | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/cxf配置方式打开日志和https/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">cxf配置方式打开日志和https</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:32:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文介绍通过配置方式打开cxf的日志和https功能。用编码方式也可以实现，但是就存在代码重复的问题，用配置方式会比较好<br><a id="more"></a></p>
+<h1 id="开启日志"><a href="#开启日志" class="headerlink" title="开启日志"></a>开启日志</h1><p>cxf内置了日志拦截器，但是默认并没有打开</p>
+<h2 id="编码方式开启"><a href="#编码方式开启" class="headerlink" title="编码方式开启"></a>编码方式开启</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;jaxws:client id=&quot;client&quot; serviceClass=&quot;xxx.xxx.xxx&quot; address=&quot;$&#123;webservice_address&#125;&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">WebserviceInterface client = (WebserviceInterface)ApplicationContext.getBean(&quot;client&quot;);</span><br><span class="line">Client proxy = ClientProxy.getClient(client);</span><br><span class="line">proxy.getInInterceptors().add(new LoggingInInterceptor());</span><br><span class="line">proxy.getOutInterceptors().add(new LoggingOutInterceptor());</span><br></pre></td></tr></table></figure>
+<h2 id="配置文件开启"><a href="#配置文件开启" class="headerlink" title="配置文件开启"></a>配置文件开启</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;jaxws:client id=&quot;client&quot; serviceClass=&quot;xxx.xxx.xxx&quot; address=&quot;$&#123;webservice_address&#125;&quot;&gt;</span><br><span class="line">		&lt;jaxws:outInterceptors&gt;</span><br><span class="line">			&lt;bean class=&quot;org.apache.cxf.interceptor.LoggingOutInterceptor&quot; /&gt;</span><br><span class="line">		&lt;/jaxws:outInterceptors&gt;</span><br><span class="line">		&lt;jaxws:inInterceptors&gt;</span><br><span class="line">			&lt;bean class=&quot;org.apache.cxf.interceptor.LoggingInInterceptor&quot; /&gt;</span><br><span class="line">		&lt;/jaxws:inInterceptors&gt;</span><br><span class="line">&lt;/jaxws:client&gt;</span><br></pre></td></tr></table></figure>
+<p>这样就可以把web service请求和响应的日志打出来了 </p>
+<h2 id="日志格式"><a href="#日志格式" class="headerlink" title="日志格式"></a>日志格式</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Outbound Message </span><br><span class="line">--------------------------- </span><br><span class="line">ID: 1 </span><br><span class="line">Address: https://www.remedy-dummy.com:443/remedy/webservice/RemedySA </span><br><span class="line">Encoding: UTF-8 </span><br><span class="line">Content-Type: text/xml </span><br><span class="line">Headers: &#123;SOAPAction=[&quot;http://cz.o2.com/systems/integrationinfrastructure/CIP-B2B/CIP-B2B_ServiceAssuranceWorkForceClientManagement/1.0/acknowledge&quot;], Accept=[*/*]&#125; </span><br><span class="line">Payload: &lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;soap:Body&gt;&lt;ns2:AcknowledgeRequest xmlns=&quot;http://cz.o2.com/cip/svc/IntegrationMessage-2.0&quot; xmlns:ns2=&quot;http://cz.o2.com/systems/integrationinfrastructure/CIP-B2B/CIP-B2B_ServiceAssuranceWorkForceClientManagement/1.0&quot;&gt;&lt;ns2:requestBody&gt;&lt;ns2:messageType&gt;wolegequ&lt;/ns2:messageType&gt;&lt;ns2:correlationId&gt;0&lt;/ns2:correlationId&gt;&lt;/ns2:requestBody&gt;&lt;/ns2:AcknowledgeRequest&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt; </span><br><span class="line">--------------------------------------</span><br></pre></td></tr></table></figure>
+<p>Outbound Message，是发出去的消息，对于客户端来说，是发出去的请求；对于服务端来说，是发出去的响应 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Inbound Message </span><br><span class="line">---------------------------- </span><br><span class="line">ID: 1 </span><br><span class="line">Encoding: UTF-8 </span><br><span class="line">Content-Type: text/xml;charset=UTF-8 </span><br><span class="line">Headers: &#123;content-type=[text/xml;charset=UTF-8], Date=[Fri, 20 Apr 2012 15:25:11 GMT], Content-Length=[478], X-Powered-By=[Servlet 2.4; JBoss-4.2.3.GA (build: SVNTag=JBoss_4_2_3_GA date=200807181417)/JBossWeb-2.0], Server=[Apache-Coyote/1.1]&#125; </span><br><span class="line">Payload: &lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;soap:Body&gt;&lt;ns2:AcknowledgeResponse xmlns=&quot;http://cz.o2.com/cip/svc/IntegrationMessage-2.0&quot; xmlns:ns2=&quot;http://cz.o2.com/systems/integrationinfrastructure/CIP-B2B/CIP-B2B_ServiceAssuranceWorkForceClientManagement/1.0&quot;&gt;&lt;ns2:responseBody&gt;&lt;ns2:status&gt;true&lt;/ns2:status&gt;&lt;ns2:errorDescription&gt;call acknowledge() success&lt;/ns2:errorDescription&gt;&lt;/ns2:responseBody&gt;&lt;/ns2:AcknowledgeResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt; </span><br><span class="line">--------------------------------------</span><br></pre></td></tr></table></figure>
+<p>Inbound Message，是收到的消息，对于客户端来说，是收到的响应；对于服务端来说，是收到的请求 </p>
+<p>ID是成对出现的，一个请求必有一个响应 </p>
+<p>Address只有请求的Outbound才有，表示发送的地址，也就是web service的endpoint<br>Headers是http请求头或响应头<br>Payload是日志的关键，其中就是soap正文的内容 </p>
+<h1 id="发送https请求"><a href="#发送https请求" class="headerlink" title="发送https请求"></a>发送https请求</h1><p>主要是要把证书的信息放到http消息中</p>
+<h2 id="编码方式实现"><a href="#编码方式实现" class="headerlink" title="编码方式实现"></a>编码方式实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">WebserviceInterface client = (WebserviceInterface) ApplicationContext</span><br><span class="line">				.getBean(&quot;client&quot;);</span><br><span class="line">		Client proxy = ClientProxy.getClient(client);</span><br><span class="line"></span><br><span class="line">		HTTPConduit conduit = (HTTPConduit) proxy.getConduit();</span><br><span class="line"></span><br><span class="line">		TLSClientParameters tlsParams = conduit.getTlsClientParameters();</span><br><span class="line">		tlsParams.setKeyManagers();</span><br><span class="line">		tlsParams.setTrustManagers();</span><br><span class="line">		tlsParams.setDisableCNCheck(true);</span><br><span class="line">		tlsParams.setSecureSocketProtocol(&quot;SSL&quot;);</span><br><span class="line"></span><br><span class="line">		conduit.setTlsClientParameters(tlsParams);</span><br></pre></td></tr></table></figure>
+<h2 id="配置文件实现"><a href="#配置文件实现" class="headerlink" title="配置文件实现"></a>配置文件实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;http:conduit name=&quot;*.http-conduit&quot;&gt;</span><br><span class="line"></span><br><span class="line">		&lt;http:tlsClientParameters disableCNCheck=&quot;true&quot;</span><br><span class="line">			secureSocketProtocol=&quot;SSL&quot;&gt;</span><br><span class="line"></span><br><span class="line">			&lt;!-- 对方的证书 --&gt;</span><br><span class="line">			&lt;sec:trustManagers&gt;</span><br><span class="line">				&lt;sec:keyStore type=&quot;JKS&quot; password=&quot;changeit&quot;</span><br><span class="line">					file=&quot;trust.keystore&quot; /&gt;</span><br><span class="line">			&lt;/sec:trustManagers&gt;</span><br><span class="line"></span><br><span class="line">			&lt;!-- 己方的证书 --&gt;</span><br><span class="line">			&lt;sec:keyManagers keyPassword=&quot;changeit&quot;&gt;</span><br><span class="line">				&lt;sec:keyStore type=&quot;JKS&quot; password=&quot;changeit&quot;</span><br><span class="line">					file=&quot;self.keystore&quot; /&gt;</span><br><span class="line">			&lt;/sec:keyManagers&gt;</span><br><span class="line"></span><br><span class="line">			&lt;sec:cipherSuitesFilter&gt;</span><br><span class="line">				&lt;sec:include&gt;.*_EXPORT_.*&lt;/sec:include&gt;</span><br><span class="line">				&lt;sec:include&gt;.*_EXPORT1024_.*&lt;/sec:include&gt;</span><br><span class="line">				&lt;sec:include&gt;.*_WITH_DES_.*&lt;/sec:include&gt;</span><br><span class="line">				&lt;sec:include&gt;.*_WITH_NULL_.*&lt;/sec:include&gt;</span><br><span class="line">				&lt;sec:exclude&gt;.*_DH_anon_.*&lt;/sec:exclude&gt;</span><br><span class="line">			&lt;/sec:cipherSuitesFilter&gt;</span><br><span class="line"></span><br><span class="line">		&lt;/http:tlsClientParameters&gt;</span><br><span class="line"></span><br><span class="line">	&lt;/http:conduit&gt;</span><br></pre></td></tr></table></figure>
+<p>用配置文件的方式，可以节省很多重复代码 </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/MongoDB初体验/" rel="next" title="MongoDB初体验">
+                <i class="fa fa-chevron-left"></i> MongoDB初体验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/管理版本分支/" rel="prev" title="管理版本分支">
+                管理版本分支 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#开启日志"><span class="nav-number">1.</span> <span class="nav-text">开启日志</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编码方式开启"><span class="nav-number">1.1.</span> <span class="nav-text">编码方式开启</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置文件开启"><span class="nav-number">1.2.</span> <span class="nav-text">配置文件开启</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志格式"><span class="nav-number">1.3.</span> <span class="nav-text">日志格式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#发送https请求"><span class="nav-number">2.</span> <span class="nav-text">发送https请求</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编码方式实现"><span class="nav-number">2.1.</span> <span class="nav-text">编码方式实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置文件实现"><span class="nav-number">2.2.</span> <span class="nav-text">配置文件实现</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

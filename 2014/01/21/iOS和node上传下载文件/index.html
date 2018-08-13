@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="上传和下载需要server和client互相配合。同样的客户端代码，可能在servlet里能成功，换成node就不行；反过来也是一样。因为不同的服务端，对http请求的处理可能不同。本文介绍的是服务端使用node，客户端使用NSURLSession的情况">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS和node上传下载文件">
+<meta property="og:url" content="http://yoursite.com/2014/01/21/iOS和node上传下载文件/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="上传和下载需要server和client互相配合。同样的客户端代码，可能在servlet里能成功，换成node就不行；反过来也是一样。因为不同的服务端，对http请求的处理可能不同。本文介绍的是服务端使用node，客户端使用NSURLSession的情况">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS和node上传下载文件">
+<meta name="twitter:description" content="上传和下载需要server和client互相配合。同样的客户端代码，可能在servlet里能成功，换成node就不行；反过来也是一样。因为不同的服务端，对http请求的处理可能不同。本文介绍的是服务端使用node，客户端使用NSURLSession的情况">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2014/01/21/iOS和node上传下载文件/"/>
+
+
+
+
+
+  <title>iOS和node上传下载文件 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/01/21/iOS和node上传下载文件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS和node上传下载文件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-01-21T23:51:00+09:00">
+                2014-01-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上传和下载需要server和client互相配合。同样的客户端代码，可能在servlet里能成功，换成node就不行；反过来也是一样。因为不同的服务端，对http请求的处理可能不同。本文介绍的是服务端使用node，客户端使用NSURLSession的情况<br><a id="more"></a></p>
+<h1 id="服务端代码"><a href="#服务端代码" class="headerlink" title="服务端代码"></a>服务端代码</h1><p>我还没见过哪种实现方式，比node + express更简单的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">var express = require(&quot;express&quot;);</span><br><span class="line"></span><br><span class="line">var app = express();</span><br><span class="line"></span><br><span class="line">app.use(express.bodyParser(&#123;</span><br><span class="line">    uploadDir: __dirname + &apos;/../var/uploads&apos;,</span><br><span class="line">    keepExtensions: true,</span><br><span class="line">    limit: 100 * 1024 * 1024,</span><br><span class="line">    defer: true</span><br><span class="line">&#125;)).use(&apos;/svc/public&apos;, express.static(__dirname + &apos;/../public&apos;));</span><br><span class="line"></span><br><span class="line">app.post(&apos;/svc/upload&apos;, function (req, res) &#123;</span><br><span class="line"></span><br><span class="line">    req.form.on(&apos;progress&apos;, function (bytesReceived, bytesExpected) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    req.form.on(&apos;end&apos;, function () &#123;</span><br><span class="line">        var tmp_path = req.files.file.path;</span><br><span class="line">        var name = req.files.file.name;</span><br><span class="line"></span><br><span class="line">        console.log(&quot;tmp_path: &quot;+ tmp_path);</span><br><span class="line">        console.log(&quot;name: &quot;+name);</span><br><span class="line"></span><br><span class="line">        res.end(&quot;success&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">app.listen(3000);</span><br></pre></td></tr></table></figure>
+<p>上面就是服务端全部的代码。defer属性设置为true，这样下面的2个生命周期回调才能生效。不过这个服务，直接用CocoaRestClient发POST请求好像不行，似乎需要在http header里加上Content-Type才可以</p>
+<h1 id="上传的客户端代码"><a href="#上传的客户端代码" class="headerlink" title="上传的客户端代码"></a>上传的客户端代码</h1><p>View省略，只介绍关键的ViewController代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@interface YLSUploadViewController : UIViewController&lt;NSURLSessionTaskDelegate&gt;</span><br><span class="line"></span><br><span class="line">-(void) doUpload;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>主要是实现NSURLSessionTaskDelegate协议，因为我们需要其中的生命周期方法来实现进度条</p>
+<p>下面是初始化的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    NSString *boundary;</span><br><span class="line">    NSString *fileParam;</span><br><span class="line">    NSURL *uploadURL;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil</span><br><span class="line">&#123;</span><br><span class="line">    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];</span><br><span class="line"></span><br><span class="line">    if (self) &#123;</span><br><span class="line"></span><br><span class="line">        boundary = @&quot;----------V2ymHFg03ehbqgZCaKO6jy&quot;;</span><br><span class="line">        fileParam = @&quot;file&quot;;</span><br><span class="line">        uploadURL = [NSURL URLWithString:@&quot;http://192.168.1.103:3000/svc/upload&quot;];        </span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里初始化了几个实例变量，下面是最关键的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">-(void) doUpload</span><br><span class="line">&#123;</span><br><span class="line">    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)&#123;</span><br><span class="line"></span><br><span class="line">        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];</span><br><span class="line"></span><br><span class="line">        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];</span><br><span class="line"></span><br><span class="line">        NSData *body = [self prepareDataForUpload];</span><br><span class="line"></span><br><span class="line">        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:uploadURL];</span><br><span class="line">        [request setHTTPMethod:@&quot;POST&quot;];</span><br><span class="line"></span><br><span class="line">        // 以下2行是关键，NSURLSessionUploadTask不会自动添加Content-Type头</span><br><span class="line">        NSString *contentType = [NSString stringWithFormat:@&quot;multipart/form-data; boundary=%@&quot;, boundary];</span><br><span class="line">        [request setValue:contentType forHTTPHeaderField: @&quot;Content-Type&quot;];</span><br><span class="line"></span><br><span class="line">        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request fromData:body completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)&#123;</span><br><span class="line"></span><br><span class="line">            NSString *message = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];</span><br><span class="line">            NSLog(@&quot;message: %@&quot;, message);</span><br><span class="line"></span><br><span class="line">            [session invalidateAndCancel];</span><br><span class="line">        &#125;];</span><br><span class="line"></span><br><span class="line">        [uploadTask resume];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(NSData*) prepareDataForUpload</span><br><span class="line">&#123;</span><br><span class="line">    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);</span><br><span class="line">    NSString *documentsDirectory = [paths objectAtIndex:0];</span><br><span class="line">    NSString *uploadFilePath = [documentsDirectory stringByAppendingPathComponent:@&quot;QQ.dmg&quot;];</span><br><span class="line"></span><br><span class="line">    NSString *fileName = [uploadFilePath lastPathComponent];</span><br><span class="line"></span><br><span class="line">    NSMutableData *body = [NSMutableData data];</span><br><span class="line"></span><br><span class="line">    NSData *dataOfFile = [[NSData alloc] initWithContentsOfFile:uploadFilePath];</span><br><span class="line"></span><br><span class="line">    if (dataOfFile) &#123;</span><br><span class="line">        [body appendData:[[NSString stringWithFormat:@&quot;--%@\r\n&quot;, boundary] dataUsingEncoding:NSUTF8StringEncoding]];</span><br><span class="line">        [body appendData:[[NSString stringWithFormat:@&quot;Content-Disposition: form-data; name=\&quot;%@\&quot;; filename=\&quot;%@\&quot;\r\n&quot;, fileParam, fileName] dataUsingEncoding:NSUTF8StringEncoding]];</span><br><span class="line">        [body appendData:[@&quot;Content-Type: application/zip\r\n\r\n&quot; dataUsingEncoding:NSUTF8StringEncoding]];</span><br><span class="line">        [body appendData:dataOfFile];</span><br><span class="line">        [body appendData:[[NSString stringWithFormat:@&quot;\r\n&quot;] dataUsingEncoding:NSUTF8StringEncoding]];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [body appendData:[[NSString stringWithFormat:@&quot;--%@--\r\n&quot;, boundary] dataUsingEncoding:NSUTF8StringEncoding]];</span><br><span class="line"></span><br><span class="line">    return body;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关键是怎么拿到NSURLSessionUploadTask，虽然NSURLSession提供了uploadTaskWithRequest:fromFile:方法，不过经过实践，发现跑不通。NSURLSession似乎不会自动加上Content-Type头，也不会自动在Data中加入boundary，结果就是server端报错：</p>
+<p>TypeError: Cannot call method ‘on’ of undefined<br>at /Users/apple/WebstormProjects/uploadAndDownloadServer/lib/main.js:15:14<br>at callbacks (/Users/apple/WebstormProjects/uploadAndDownloadServer/node_modules/express/lib/router/index.js:161:37)<br>at param (/Users/apple/WebstormProjects/uploadAndDownloadServer/node_modules/express/lib/router/index.js:135:11)<br>at pass (/Users/apple/WebstormProjects/uploadAndDownloadServer/node_modules/express/lib/router/index.js:142:5)<br>at Router._dispatch (/Users/apple/WebstormProjects/uploadAndDownloadServer/node_modules/express/lib/router/index.js:170:5)<br>at Object.router (/Users/apple/WebstormProjects/uploadAndDownloadServer/node_modules/express/lib/router/index.js:33:10)<br>at next (/Users/apple/WebstormProjects/uploadAndDownloadServer/node_modules/express/node_modules/connect/lib/proto.js:190:15)<br>at next (/Users/apple/WebstormProjects/uploadAndDownloadServer/node_modules/express/node_modules/connect/lib/proto.js:165:78)<br>at multipart (/Users/apple/WebstormProjects/uploadAndDownloadServer/node_modules/express/node_modules/connect/lib/middleware/multipart.js:60:27)<br>at /Users/apple/WebstormProjects/uploadAndDownloadServer/node_modules/express/node_modules/connect/lib/middleware/bodyParser.js:57:9</p>
+<p>所以我最后的做法是，自己从File中读出Data，并拼上所需的控制符，这都是在prepareDataForUpload()方法里实现的</p>
+<p>最后是Delegate method方法，我只需要一个：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend</span><br></pre></td></tr></table></figure>
+<p>这个就很简单了，不多介绍了，有totalBytesSent和totalBytesExpectedSend这2个变量，无论是要做文本提示，还是进度条，都是很容易实现的</p>
+<p>不过上面的示例代码，为了方便把自己设置为delegate了。实际项目里，应该把业务逻辑的类设置为upload组件的delegate。因为上传之后应该做什么，应该是在业务组件里控制才对</p>
+<h1 id="下载的客户端代码"><a href="#下载的客户端代码" class="headerlink" title="下载的客户端代码"></a>下载的客户端代码</h1><p>相比上传的代码，下载简单很多：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">-(void) doDownload</span><br><span class="line">&#123;</span><br><span class="line">    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)&#123;</span><br><span class="line"></span><br><span class="line">        NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];</span><br><span class="line"></span><br><span class="line">        NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];</span><br><span class="line"></span><br><span class="line">        NSURL *url = [NSURL URLWithString:@&quot;http://192.168.1.103:3000/svc/public/bigfile.dmg&quot;];</span><br><span class="line"></span><br><span class="line">        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];</span><br><span class="line">        [request setHTTPMethod:@&quot;GET&quot;];</span><br><span class="line"></span><br><span class="line">        NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request];// 未设置block</span><br><span class="line"></span><br><span class="line">        [downloadTask resume];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码只有一点需要注意，即调用的是downloadTaskWithRequest:方法，而不是另一个带block callback的API。因为发现，如果设置了completionHandler，则delegate method不会被调用，但是和上传一样，我们需要delegate method来实现下载进度条</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@interface YLSDownloadViewController : UIViewController&lt;NSURLSessionDownloadDelegate&gt;</span><br></pre></td></tr></table></figure>
+<p>其中这个方法可以实现进度条：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite</span><br></pre></td></tr></table></figure>
+<p>下载后的文件，是放在tmp目录下，如果不处理的话，马上就会被移除，所以需要在另一个delegate method里拷贝到最终路径：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location</span><br><span class="line">&#123;</span><br><span class="line">    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);</span><br><span class="line">    NSString *documentsDirectory = [paths objectAtIndex:0];</span><br><span class="line">    NSString *distFilePath = [documentsDirectory stringByAppendingPathComponent:@&quot;success.dmg&quot;];</span><br><span class="line"></span><br><span class="line">    NSString* tempFilePath = [location path];</span><br><span class="line"></span><br><span class="line">    NSFileManager *fileManager = [NSFileManager defaultManager];</span><br><span class="line">    if([fileManager fileExistsAtPath:tempFilePath])&#123;</span><br><span class="line">        [fileManager copyItemAtPath:tempFilePath toPath:distFilePath error:nil];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [session invalidateAndCancel];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/01/20/iOS6下用Cordova弹出图片选择页面，造成应用crash/" rel="next" title="iOS6下用Cordova弹出图片选择页面，造成应用crash">
+                <i class="fa fa-chevron-left"></i> iOS6下用Cordova弹出图片选择页面，造成应用crash
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/01/24/iOS7应用隐藏状态栏/" rel="prev" title="iOS7应用隐藏状态栏">
+                iOS7应用隐藏状态栏 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#服务端代码"><span class="nav-number">1.</span> <span class="nav-text">服务端代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#上传的客户端代码"><span class="nav-number">2.</span> <span class="nav-text">上传的客户端代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下载的客户端代码"><span class="nav-number">3.</span> <span class="nav-text">下载的客户端代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

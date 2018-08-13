@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本系列是阅读logback源码的总结。本文介绍logback如何对接slf4j">
+<meta property="og:type" content="article">
+<meta property="og:title" content="读logback源码系列文章（一）——对接slf4j">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/读logback源码系列文章（一）——对接slf4j/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="本系列是阅读logback源码的总结。本文介绍logback如何对接slf4j">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/545181/ab7a9f31-dffe-3bee-ac3e-ba69a9b6d118.jpg">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/545186/46dbea34-ed32-3048-8e15-71c989f6c939.jpg">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/545188/17c30081-f661-3f6f-a715-ee1549766878.jpg">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="读logback源码系列文章（一）——对接slf4j">
+<meta name="twitter:description" content="本系列是阅读logback源码的总结。本文介绍logback如何对接slf4j">
+<meta name="twitter:image" content="http://dl.iteye.com/upload/attachment/545181/ab7a9f31-dffe-3bee-ac3e-ba69a9b6d118.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/读logback源码系列文章（一）——对接slf4j/"/>
+
+
+
+
+
+  <title>读logback源码系列文章（一）——对接slf4j | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/读logback源码系列文章（一）——对接slf4j/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">读logback源码系列文章（一）——对接slf4j</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T10:34:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/源码阅读/" itemprop="url" rel="index">
+                    <span itemprop="name">源码阅读</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本系列是阅读logback源码的总结。本文介绍logback如何对接slf4j<br><a id="more"></a></p>
+<p>slf4j为各种日志框架提供了一个统一的界面，使用户可以用统一的接口记录日志，但是动态地决定真正的实现框架。logback，log4j，common-logging等框架都实现了这些接口。所以分析logback，首先要从它怎么对接slf4j说起</p>
+<p>slf4j框架本身是非常简单的，一共只有3个package，不到30个class。而且其中很多类在读源码的时候是不必深究的</p>
+<p>PS：插一句题外话，很多朋友看到一个项目里动辄几十个package，数不清的类，当时就蒙了，然后读了几天就放弃了</p>
+<p>这里我说2个建议： </p>
+<p>1、源代码的类虽然很多，但是一般是有一个清晰的结构的（当然有些项目确实结构混乱，东一撮西一撮的，那没关系，不读就是了）。所以在深入到具体的细节之前，应该先把整个代码的结构梳理清楚，再一块一块地往下读。梳理清楚了脉络和结构，可以直接跳过不想深究的细节，只要知道它是干什么的就行了，当用到的时候再来看 </p>
+<p>2、源代码的类虽然很多，但是一般会有一个入口。比如hibernate的SessionFactory，spring的ApplicationContext，logback的LoggerFactory。从入口进去，一点点地读，必要的时候使用debug功能跟着走一走，相信会清晰很多 </p>
+<p>回到slf4j，slf4j最关键的是2个接口，和一个入口类。搞清楚了这3个，对slf4j就会比较清楚了</p>
+<p>最关键的2个接口，分别是Logger和ILoggerFactory。最关键的入口类，是LoggerFactory </p>
+<p>所有的具体实现框架，一定会实现Logger接口和ILoggerFactory接口。前者实际记录日志，后者用来提供Logger，重要性不言自明。而LoggerFactory类，则是前面说过的入口类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Logger logger = LoggerFactory.getLogger(Main.class);</span><br></pre></td></tr></table></figure>
+<p>不管实现框架是什么，要获取Logger对象，都是通过这个类的getLogger()方法，所以这个类也非常重要。具体实现框架和slf4j的对接，就是通过这个类 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/545181/ab7a9f31-dffe-3bee-ac3e-ba69a9b6d118.jpg" alt=""></p>
+<p>如图，每个日志框架都需要实现ILoggerFactory接口，来说明自己是怎么提供Logger的。像log4j、logback能够提供父子层级关系的Logger，就是在ILoggerFactory的实现类里实现的。同时，它们也需要实现Logger接口，以完成记录日志。为啥log4j和logback可以一个Logger对应多个Appender？这就要去分析它们的Logger实现类</p>
+<p>slf4j自带的NOPLoggerFactory，实现了ILoggerFactory，其getLogger()方法很简单，就是返回一个NOPLogger</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class NOPLoggerFactory implements ILoggerFactory &#123;</span><br><span class="line"></span><br><span class="line">  public NOPLoggerFactory() &#123;</span><br><span class="line">    // nothing to do</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public Logger getLogger(String name) &#123;</span><br><span class="line">    return NOPLogger.NOP_LOGGER;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>NOPLogger实现了Logger接口，它就更简单，如同它的名字一样：什么都不做</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/** A NOP implementation. */</span><br><span class="line">  final public void info(String msg) &#123;</span><br><span class="line">    // NOP</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /** A NOP implementation. */</span><br><span class="line">  final  public void info(String format, Object arg1) &#123;</span><br><span class="line">    // NOP</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  /** A NOP implementation. */</span><br><span class="line">  final public void info(String format, Object arg1, Object arg2) &#123;</span><br><span class="line">    // NOP</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>下面就是关键的LoggerFactory类了，这个入口类是怎么提供Logger的呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public static Logger getLogger(String name) &#123;</span><br><span class="line">    ILoggerFactory iLoggerFactory = getILoggerFactory();</span><br><span class="line">    return iLoggerFactory.getLogger(name);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>首先它调用一个private的getILoggerFactory()方法，获得一个ILoggerFactory的实现类，然后委托这个实现类提供一个Logger实现类。就是这样把获取实际Logger的工作，委托给具体的日志框架上，比如log4j、logback、common-logging等</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public static ILoggerFactory getILoggerFactory() &#123;</span><br><span class="line">    if (INITIALIZATION_STATE == UNINITIALIZED) &#123;</span><br><span class="line">      INITIALIZATION_STATE = ONGOING_INITILIZATION;</span><br><span class="line">      performInitialization();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    switch (INITIALIZATION_STATE) &#123;</span><br><span class="line">    case SUCCESSFUL_INITILIZATION:</span><br><span class="line">      return StaticLoggerBinder.getSingleton().getLoggerFactory();</span><br><span class="line">    case NOP_FALLBACK_INITILIZATION:</span><br><span class="line">      return NOP_FALLBACK_FACTORY;</span><br><span class="line">    case FAILED_INITILIZATION:</span><br><span class="line">      throw new IllegalStateException(UNSUCCESSFUL_INIT_MSG);</span><br><span class="line">    case ONGOING_INITILIZATION:</span><br><span class="line">      // support re-entrant behavior.</span><br><span class="line">      // See also http://bugzilla.slf4j.org/show_bug.cgi?id=106</span><br><span class="line">      return TEMP_FACTORY;</span><br><span class="line">    &#125;</span><br><span class="line">    throw new IllegalStateException(&quot;Unreachable code&quot;);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>为了获得ILoggerFactory的实现类，它首先判断初始化是否成功，如果没成功，它会委托NOPLoggerFactory来提供Logger，最终结果就是一个没实现的NOPLogger。如果初始化成功了，就是和日志框架对接成功，就委托日志框架的ILoggerFactory来提供Logger的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">private final static void performInitialization() &#123;</span><br><span class="line">    singleImplementationSanityCheck();</span><br><span class="line">    bind();</span><br><span class="line">    if (INITIALIZATION_STATE == SUCCESSFUL_INITILIZATION) &#123;</span><br><span class="line">      versionSanityCheck();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>在初始化里，它要做3个工作。首先是检查classpath里是否存在多个日志框架，如果有就会抛出警告信息，提示用户只保留一个。然后是关键的bind()方法，绑定实现框架。最后再检查一下版本完整性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">private final static void bind() &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">      // the next line does the binding</span><br><span class="line">      StaticLoggerBinder.getSingleton();</span><br><span class="line">      INITIALIZATION_STATE = SUCCESSFUL_INITILIZATION;</span><br><span class="line">      emitSubstituteLoggerWarning();</span><br><span class="line">    &#125; catch (NoClassDefFoundError ncde) &#123;</span><br><span class="line">      String msg = ncde.getMessage();</span><br><span class="line">      if (msg != null &amp;&amp; msg.indexOf(&quot;org/slf4j/impl/StaticLoggerBinder&quot;) != -1) &#123;</span><br><span class="line">        INITIALIZATION_STATE = NOP_FALLBACK_INITILIZATION;</span><br><span class="line">        Util</span><br><span class="line">            .report(&quot;Failed to load class \&quot;org.slf4j.impl.StaticLoggerBinder\&quot;.&quot;);</span><br><span class="line">        Util.report(&quot;Defaulting to no-operation (NOP) logger implementation&quot;);</span><br><span class="line">        Util.report(&quot;See &quot; + NO_STATICLOGGERBINDER_URL</span><br><span class="line">            + &quot; for further details.&quot;);</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        failedBinding(ncde);</span><br><span class="line">        throw ncde;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; catch(java.lang.NoSuchMethodError nsme) &#123;</span><br><span class="line">      String msg = nsme.getMessage();</span><br><span class="line">      if (msg != null &amp;&amp; msg.indexOf(&quot;org.slf4j.impl.StaticLoggerBinder.getSingleton()&quot;) != -1) &#123;</span><br><span class="line">        INITIALIZATION_STATE = FAILED_INITILIZATION;</span><br><span class="line">        Util.report(&quot;slf4j-api 1.6.x (or later) is incompatible with this binding.&quot;);</span><br><span class="line">        Util.report(&quot;Your binding is version 1.5.5 or earlier.&quot;);</span><br><span class="line">        Util.report(&quot;Upgrade your binding to version 1.6.x. or 2.0.x&quot;);</span><br><span class="line">      &#125;</span><br><span class="line">      throw nsme;</span><br><span class="line">    &#125; catch (Exception e) &#123;</span><br><span class="line">      failedBinding(e);</span><br><span class="line">      throw new IllegalStateException(&quot;Unexpected initialization failure&quot;, e);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码提到了一个最关键的StaticLoggerBinder类，检查是否有这个类存在，以及这个类有没有getSingleton()方法，如果有，就视为绑定成功。其实这个类还必须有getLoggerFactory()方法，否则虽然绑定成功，但是到了运行期，一样会抛出NoSuchMethodException。我认为这里是slf4j设计不好的地方，应该在bind()方法里，就检查一下StaticLoggerBinder有没有实现getLoggerFactory()方法。 这个StaticLoggerBinder类，就是具体实现框架和slf4j框架对接的接口</p>
+<p><img src="http://dl.iteye.com/upload/attachment/545186/46dbea34-ed32-3048-8e15-71c989f6c939.jpg" alt=""></p>
+<p>这就介绍完了logback是怎么和slf4j对接的。不止是logback，任何日志框架，一定都是通过自己的StaticLoggerBinder类，来和slf4j对接。这个类的实现，在不同的框架中不同，比如后面会说到，在logback中，这个类被设计为或者简单的返回一个默认的LoggerContext（LoggerContext是ILoggerFactory在logback中的实现），或者通过ContextSelector（logback特有的）来选择一个LoggerContext并返回</p>
+<p>大家可能会有一个疑问：在LoggerFactory类的bind()方法里，依赖了StaticLoggerBinder类，但是slf4j框架里又没有这个类，那么框架一开始是怎么编译通过并发布成jar包的呢？ </p>
+<p>我认为应该是这样的： </p>
+<p><img src="http://dl.iteye.com/upload/attachment/545188/17c30081-f661-3f6f-a715-ee1549766878.jpg" alt=""></p>
+<p>作者一开始的时候，是以类似图里的包结构组织代码的。为了编译通过，作者写了一个StaticLoggerBinder类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private final ILoggerFactory loggerFactory;</span><br><span class="line"></span><br><span class="line">  private StaticLoggerBinder() &#123;</span><br><span class="line">    loggerFactory = new NOPLoggerFactory();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  public ILoggerFactory getLoggerFactory() &#123;</span><br><span class="line">    return loggerFactory;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后，作者把org.slf4j、org.slf4j.helpers、org.slf4j.spi这3个package发布为slf4j-api.jar。把org.slf4j.impl发布为slf4j-nop.jar 用户实际使用的时候，必须要引入slf4j-api.jar和具体实现框架，比如log4j.jar，以及对接用的slf4j-log4j.jar，不需要引入slf4j-nop.jar </p>
+<p>最后，大家可能还有一个疑问：为什么log4j和logback这么相似，又为什么log4j和logback可以和slf4j结合地这么好呢？这是因为，这3个框架的作者，根本是同一个人。这位大哥应该可以算作日志界的战斗机了</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/android process and thread/" rel="next" title="android process and thread">
+                <i class="fa fa-chevron-left"></i> android process and thread
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/IPD研发流程总结/" rel="prev" title="IPD研发流程总结">
+                IPD研发流程总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

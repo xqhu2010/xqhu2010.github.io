@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文总结对javaee，规范的理解。包括：什么是java ee，各种规范的接口的jar包（及源码）怎么获取，各种规范的实现的jar包（及源码）怎么获取">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对JAVAEE规范的理解">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/对JAVAEE规范的理解/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="本文总结对javaee，规范的理解。包括：什么是java ee，各种规范的接口的jar包（及源码）怎么获取，各种规范的实现的jar包（及源码）怎么获取">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9851/c46f71a0-4f9c-3b0b-b7cc-b4044f702023.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9859/74e91e81-5c6f-334f-8b42-f87979513c10.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9864/30946fba-c3a8-3ba2-b0c3-b8acc134d3f9.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9867/39b26bc3-f15b-3c5c-9393-4b975f05241d.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9872/73db9653-6e1b-3cd6-8600-709294f2a869.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9874/fc0335cc-c38a-3d29-b837-2d20d41a44a0.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9876/6de8b4df-01fb-3537-86f9-b7fbceb98e80.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9880/6f3597c0-42cf-32da-8472-260fd18214dc.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9886/2c499218-f055-32d0-bc6e-faae73a29197.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9891/d82347c5-d840-3743-8adc-b6bfc01921e2.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0071/9895/07c7e53d-a5af-36ac-abd6-f455142862f8.png">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对JAVAEE规范的理解">
+<meta name="twitter:description" content="本文总结对javaee，规范的理解。包括：什么是java ee，各种规范的接口的jar包（及源码）怎么获取，各种规范的实现的jar包（及源码）怎么获取">
+<meta name="twitter:image" content="http://dl.iteye.com/upload/attachment/0071/9851/c46f71a0-4f9c-3b0b-b7cc-b4044f702023.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/对JAVAEE规范的理解/"/>
+
+
+
+
+
+  <title>对JAVAEE规范的理解 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/对JAVAEE规范的理解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">对JAVAEE规范的理解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:06:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文总结对javaee，规范的理解。包括：什么是java ee，各种规范的接口的jar包（及源码）怎么获取，各种规范的实现的jar包（及源码）怎么获取<br><a id="more"></a></p>
+<h1 id="什么是JAVA-EE"><a href="#什么是JAVA-EE" class="headerlink" title="什么是JAVA EE"></a>什么是JAVA EE</h1><p>JAVA EE是由一系列规范组成的，规范是由JCP制定的，并且提供了参考实现。规范（Specification）是一系列接口，不包含具体实现 </p>
+<p>有以下常见的JAVA EE实现，包括JBOSS、GLASSFISH等。而tomcat是一个servlet容器，实现了servlet规范、jsp规范。但是它并没有实现EJB、JMS、JPA等规范，所以tomcat不是一个完整的JAVA EE实现 </p>
+<p>在oracle网站上，下载JAVA EE SDK时，会同时下载GLASSFISH，也就是同时下载了JAVA EE SDK，及一个JAVA EE的实现 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9851/c46f71a0-4f9c-3b0b-b7cc-b4044f702023.png" alt=""></p>
+<h1 id="怎么获取某个规范的接口的jar包"><a href="#怎么获取某个规范的接口的jar包" class="headerlink" title="怎么获取某个规范的接口的jar包"></a>怎么获取某个规范的接口的jar包</h1><p>直觉上，我觉得既然规范是JCP制定的，那它当然也就应该负责提供接口的jar包及源码，比如jsr-914.jar，jsr-914_source.jar </p>
+<p>然后实现规范的产商，基于这个jar包开发各自的实现；而规范的使用者，也基于这个jar包调用。这样可以保证接口和实现的分离 </p>
+<p>不过事实上，好像不是这样的。很多规范的接口jar包，我在<a href="http://www.jcp.org、www.java.net、www.oracle.com上，都找不到下载的链接" target="_blank" rel="noopener">www.jcp.org、www.java.net、www.oracle.com上，都找不到下载的链接</a></p>
+<p>有人说是因为从sun把java卖给oracle之后，oracle关闭了很多项目，所以这些jar包都找不着了，我也不知道是不是这样 </p>
+<p>总之，我感觉没有一个很方便的途径，可以获取到各种规范的“官方jar包” </p>
+<p>不过有2个办法，都可以做到 </p>
+<p>第一个办法，是可以下载一个相关规范的实现，实现里肯定是有接口jar包的。还是拿jsr-914举例，我下载了2个实现，activemq和jboss </p>
+<p>在activemq安装目录的lib目录下，可以找到接口的jar </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9859/74e91e81-5c6f-334f-8b42-f87979513c10.png" alt=""></p>
+<p>在jboss安装目录的/modules/javax/jms/api/main目录下，也可以找到 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9864/30946fba-c3a8-3ba2-b0c3-b8acc134d3f9.png" alt=""></p>
+<p>第二个办法，好像更方便一点。eclipse有一个项目叫eclipse orbit，在这个项目里，可以找到大部分的规范接口jar包 </p>
+<p>以下是官方对此项目的说明： </p>
+<p>This project will provide a repository of bundled versions of third party libraries that are approved for use in one or more Eclipse projects. The repository will maintain old versions of such libraries to facilitate rebuilding historical output. It will also clearly indicate the status of the library (i.e., the approved scope of use). The repository will be structured such that the contained bundles are easily obtained and added to a developer’s workspace or target platform. </p>
+<p>下载后的jar包，放在eclipse安装目录的plugins目录下，名字看起来比较奇怪 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9867/39b26bc3-f15b-3c5c-9393-4b975f05241d.png" alt=""></p>
+<p>通过这2种方式，都可以得到规范的接口jar包，把它们加入到eclipse的工程里看一下： </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9872/73db9653-6e1b-3cd6-8600-709294f2a869.png" alt=""></p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9874/fc0335cc-c38a-3d29-b837-2d20d41a44a0.png" alt=""></p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9876/6de8b4df-01fb-3537-86f9-b7fbceb98e80.png" alt=""></p>
+<p>可以看到3个jar包中的内容基本是一样的，根据某些网友的说法，所有这些jar包，都是经过了JCP认证的，所以都可以直接使用。那我理解这就相当于JCP偷了懒，本来这个jar包应该是由它提供的，但是它没有这么做。而是由各实现提供商来提供这个jar包，JCP只负责认证 </p>
+<h1 id="怎么获取某个规范的接口的jar包的源码"><a href="#怎么获取某个规范的接口的jar包的源码" class="headerlink" title="怎么获取某个规范的接口的jar包的源码"></a>怎么获取某个规范的接口的jar包的源码</h1><p>其实搞清楚了上面一个问题，这个问题就很简单了</p>
+<p>orbit项目对每个接口jar包，都提供了相应的源码。所以如果是通过orbit得到jar包，那也就一定能够得到源码 </p>
+<p>如果是通过下载实现的方式获取到接口jar包，那么如果这个实现是开源的，就能得到相应的源码；如果不是开源的实现，那么就得不到源码了 </p>
+<p>比如说tomcat是比较方便的，可以直接下载并解压，得到apache-tomcat-7.0.23-src，其中的java目录，就是各种源码 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9880/6f3597c0-42cf-32da-8472-260fd18214dc.png" alt=""></p>
+<p>jboss也是开源的，不过没有tomcat那么方便，需要下载以后自己再跑脚本进行编译 </p>
+<p>不过这里有一点要澄清一下，就是一般来说，开发者是不需要用到接口jar包的源码的 </p>
+<p><a href="http://java.net/jira/browse/GLASSFISH-11389" target="_blank" rel="noopener"></a>，这个帖子里说到： </p>
+<p>To assist developers to do what? The corresponding JARs are stripped (no bytecode for methods) and are meant to be used only for compilation. IDEs like NB or Eclipse bundle a zip for the javadoc. What other use case do you need to get the src? Debugging? In this case, these jars are not used for execution so also not for debugging. In the case of debugging, I think there is a complete GF src somewhere to step into the real code you execute from the real non stripped gf jars. </p>
+<p>接口jar包的源码是移除的，只是用于编译。一般的IDE都有zip文件来提供javadoc。对于需要debug的场景，需要源码的也应该是实现类，而不是接口 </p>
+<p><a href="http://stackoverflow.com/questions/7457810/how-to-get-the-source-code-for-the-javaxjavaee-api-6-0-jar" target="_blank" rel="noopener"></a>，这个帖子也表达了类似的意思： </p>
+<p>The purpose of the javaee-api module is to satisfy compile-time dependencies (That is why the Maven scope is set to provided). The module contains interface declarations (or contract) which must be satisfied by the J2EE container you plan to use. If you really need/want to see the source code, I’d suggest taking a look at one of the open source J2EE containers. </p>
+<p>接口jar包的主要目的是满足编译时的依赖 所以，一般来说，开发者是不需要用到接口jar包的源码的，无论是为了javadoc或者debug，都不需要。当然，你可以说我就是想看看，那可以用上面说的方法获取到 </p>
+<h1 id="怎么获取某个规范的实现的jar包-源码"><a href="#怎么获取某个规范的实现的jar包-源码" class="headerlink" title="怎么获取某个规范的实现的jar包/源码"></a>怎么获取某个规范的实现的jar包/源码</h1><p>搞清楚了上面3个问题，这个问题也就解决了。比如要得到tomcat的servlet实现的jar包，就下载tomcat，在其中的lib目录下就有 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9886/2c499218-f055-32d0-bc6e-faae73a29197.png" alt=""></p>
+<p>然后，如果你选择的实现是开源的，那就再下载一下其源码发布包，就可以得到源码了 </p>
+<h1 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h1><p>在eclipse开发JAVA EE应用，在编译时需要引入所需的jar包，这跟最终的目标容器是有关系的，比如我打算开发一个部署在jboss中的WEB应用，那么eclipse会自动导入jboss-library </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9891/d82347c5-d840-3743-8adc-b6bfc01921e2.png" alt=""></p>
+<p>如果是打算部署在tomcat里，那么eclipse会导入tomcat-library </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0071/9895/07c7e53d-a5af-36ac-abd6-f455142862f8.png" alt=""></p>
+<p>可以看到，这2个库是不一样的。但是，这个时候导入的jar包，只是为了满足编译时的需要，这些jar包并不会被打入最后的.war包里（WEB-INF/lib下的才会）。这些Runtime Library，在运行时会从容器的classpath里被找到并加载 </p>
+<p>理论上来说，开发一个servlet应用，就算开发时选择的是JBoss Runtime Library，但是只引用了接口，没有依赖jboss具体的实现类的话，那么打出的.war包，在运行时扔到tomcat里也是可以跑的。原因前面说过了，双方的servlet-api.jar，都是经过JCP认证的，所以能够保证一致性。但是如果编码时依赖了JBoss提供的实现类，那到tomcat里就绝对跑不了了 </p>
+<p>但是，如果开发的是完整的JAVA EE应用，比如依赖了JMS、EJB的接口，那扔到tomcat里就不能跑了，还需要额外的JMS中间件的支持，原因上面也说过了，因为tomcat只是一个servlet容器，部分实现了JAVA EE规范，不是一个JAVA EE的完整实现</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/定位HttpClient超时问题/" rel="next" title="定位HttpClient超时问题">
+                <i class="fa fa-chevron-left"></i> 定位HttpClient超时问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/代码重用/" rel="prev" title="代码重用">
+                代码重用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是JAVA-EE"><span class="nav-number">1.</span> <span class="nav-text">什么是JAVA EE</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#怎么获取某个规范的接口的jar包"><span class="nav-number">2.</span> <span class="nav-text">怎么获取某个规范的接口的jar包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#怎么获取某个规范的接口的jar包的源码"><span class="nav-number">3.</span> <span class="nav-text">怎么获取某个规范的接口的jar包的源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#怎么获取某个规范的实现的jar包-源码"><span class="nav-number">4.</span> <span class="nav-text">怎么获取某个规范的实现的jar包/源码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#题外话"><span class="nav-number">5.</span> <span class="nav-text">题外话</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文介绍一个多maven项目的实例demo，展示了聚合、继承、工程依赖、单元测试、多war聚合、cargo发布等场景">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个多maven项目聚合的实例">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/一个多maven项目聚合的实例/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="本文介绍一个多maven项目的实例demo，展示了聚合、继承、工程依赖、单元测试、多war聚合、cargo发布等场景">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0073/9522/c5d3d487-6277-3c19-bf4f-d48b0fe3391b.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0073/9525/28fcfabc-0628-36ef-aaf2-ca87fb5b2f84.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0080/1348/8414f73a-a2be-380f-a862-79f47313b8b9.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0080/1350/a1809ae2-f494-3267-9b9d-124cd1a4aa50.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0073/9563/55bb6102-cd77-3d23-9f8b-f66b78e0e4a9.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0080/1352/bf1484d7-badb-32c3-8c79-4d9627a5788d.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0073/9576/afe24b98-432a-3713-89b5-680efa58f01e.png">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0073/9581/b90b3452-33cb-3b94-b951-102604628ebb.png">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一个多maven项目聚合的实例">
+<meta name="twitter:description" content="本文介绍一个多maven项目的实例demo，展示了聚合、继承、工程依赖、单元测试、多war聚合、cargo发布等场景">
+<meta name="twitter:image" content="http://dl.iteye.com/upload/attachment/0073/9522/c5d3d487-6277-3c19-bf4f-d48b0fe3391b.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/一个多maven项目聚合的实例/"/>
+
+
+
+
+
+  <title>一个多maven项目聚合的实例 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/一个多maven项目聚合的实例/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一个多maven项目聚合的实例</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:12:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文介绍一个多maven项目的实例demo，展示了聚合、继承、工程依赖、单元测试、多war聚合、cargo发布等场景<br><a id="more"></a></p>
+<h1 id="工程介绍"><a href="#工程介绍" class="headerlink" title="工程介绍"></a>工程介绍</h1><p>该项目由5个maven项目组成 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0073/9522/c5d3d487-6277-3c19-bf4f-d48b0fe3391b.png" alt=""></p>
+<p>task-aggregator是父工程，同时承担聚合模块和父模块的作用，没有实际代码和资源文件<br>task-common是基础工程，里面是公共的代码<br>task-sla是某一个业务子模块，不包含web内容<br>task-sla-web是某一个web子模块<br>task-web-dist是最外围的web工程，聚合多个web工程，形成最终的war包 </p>
+<p>依赖关系是：task-web-dist依赖task-sla-web依赖task-sla依赖task-common </p>
+<h1 id="task-aggregator"><a href="#task-aggregator" class="headerlink" title="task-aggregator"></a>task-aggregator</h1><p><img src="http://dl.iteye.com/upload/attachment/0073/9525/28fcfabc-0628-36ef-aaf2-ca87fb5b2f84.png" alt=""></p>
+<p>这个工程是起到聚合作用，并充当parent pom，所以没有任何实际代码和资源文件。我这里选择了平行结构，另外一种方式是树形结构，我个人感觉平行结构看起来更舒服一点。下面是pom，有所简化：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">	&lt;!-- 定义公共变量 --&gt;</span><br><span class="line">	&lt;properties&gt;</span><br><span class="line">		&lt;spring.version&gt;3.1.0.RELEASE&lt;/spring.version&gt;</span><br><span class="line">		&lt;struts2.version&gt;2.3.1&lt;/struts2.version&gt;</span><br><span class="line">		&lt;hibernate.version&gt;3.2.7.ga&lt;/hibernate.version&gt;</span><br><span class="line">	&lt;/properties&gt;</span><br><span class="line"></span><br><span class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">	&lt;groupId&gt;com.xxx.task&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;task-aggregator&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;</span><br><span class="line">	&lt;packaging&gt;pom&lt;/packaging&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 待聚合模块 --&gt;</span><br><span class="line">	&lt;modules&gt;</span><br><span class="line">		&lt;module&gt;../task-common&lt;/module&gt;</span><br><span class="line">		&lt;module&gt;../task-sla&lt;/module&gt;</span><br><span class="line">		&lt;module&gt;../task-sla-web&lt;/module&gt;</span><br><span class="line">		&lt;module&gt;../task-web-dist&lt;/module&gt;</span><br><span class="line">	&lt;/modules&gt;</span><br><span class="line"></span><br><span class="line">	&lt;!-- 配置部署的远程仓库 --&gt;</span><br><span class="line">	&lt;distributionManagement&gt;</span><br><span class="line">		&lt;snapshotRepository&gt;</span><br><span class="line">			&lt;id&gt;nexus-snapshots&lt;/id&gt;</span><br><span class="line">			&lt;name&gt;nexus distribution snapshot repository&lt;/name&gt;</span><br><span class="line">			&lt;url&gt;http://10.78.68.122:9090/nexus-2.1.1/content/repositories/snapshots/&lt;/url&gt;</span><br><span class="line">		&lt;/snapshotRepository&gt;</span><br><span class="line">	&lt;/distributionManagement&gt;</span><br><span class="line"></span><br><span class="line">	&lt;build&gt;</span><br><span class="line"></span><br><span class="line">		&lt;pluginManagement&gt;</span><br><span class="line">			&lt;plugins&gt;</span><br><span class="line"></span><br><span class="line">				&lt;plugin&gt;</span><br><span class="line">					&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">					&lt;artifactId&gt;maven-resources-plugin&lt;/artifactId&gt;</span><br><span class="line">					&lt;version&gt;2.6&lt;/version&gt;</span><br><span class="line">					&lt;configuration&gt;</span><br><span class="line">						&lt;encoding&gt;UTF-8&lt;/encoding&gt;</span><br><span class="line">					&lt;/configuration&gt;</span><br><span class="line">				&lt;/plugin&gt;</span><br><span class="line"></span><br><span class="line">				&lt;plugin&gt;</span><br><span class="line">					&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">					&lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;</span><br><span class="line">					&lt;version&gt;2.5.1&lt;/version&gt;</span><br><span class="line">					&lt;configuration&gt;</span><br><span class="line">						&lt;encoding&gt;UTF-8&lt;/encoding&gt;</span><br><span class="line">					&lt;/configuration&gt;</span><br><span class="line">				&lt;/plugin&gt;</span><br><span class="line"></span><br><span class="line">			&lt;/plugins&gt;</span><br><span class="line">		&lt;/pluginManagement&gt;</span><br><span class="line"></span><br><span class="line">	&lt;/build&gt;</span><br><span class="line"></span><br><span class="line">	&lt;dependencyManagement&gt;</span><br><span class="line"></span><br><span class="line">		&lt;dependencies&gt;</span><br><span class="line"></span><br><span class="line">			&lt;dependency&gt;</span><br><span class="line">				&lt;groupId&gt;com.sun&lt;/groupId&gt;</span><br><span class="line">				&lt;artifactId&gt;tools&lt;/artifactId&gt;</span><br><span class="line">				&lt;version&gt;1.6.0&lt;/version&gt;</span><br><span class="line">				&lt;scope&gt;system&lt;/scope&gt;</span><br><span class="line">				&lt;systemPath&gt;$&#123;env.JAVA_HOME&#125;/lib/tools.jar&lt;/systemPath&gt;</span><br><span class="line">			&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">		&lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">	&lt;/dependencyManagement&gt;</span><br><span class="line"></span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
+<p>有几点注意下：     </p>
+<p>1、这里配置了distributionManagement，这样子项目就不需要重复配置了    </p>
+<p>2、通过pluginManagement，对一些插件进行了公共的配置，这里主要是为了消除构建时的告警     </p>
+<p>3、配置tools，是因为实际中发现，其他开发人员从svn上check out工程以后，有的人会报错，找不到tools.jar，这样配置以后就好了 </p>
+<h1 id="task-common"><a href="#task-common" class="headerlink" title="task-common"></a>task-common</h1><p>该工程是公共工程，提供了项目中的公共代码，这里只包括了通用的DAO组件，作为示例。该工程不依赖任何其他工程 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0080/1348/8414f73a-a2be-380f-a862-79f47313b8b9.png" alt=""></p>
+<p>该工程里有几点要点：     </p>
+<h2 id="在代码内部用了Spring的注解"><a href="#在代码内部用了Spring的注解" class="headerlink" title="在代码内部用了Spring的注解"></a>在代码内部用了Spring的注解</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public abstract class GenericDAO&lt;T&gt; implements IGenericDAO&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">	private Class&lt;T&gt; entityClass;</span><br><span class="line"></span><br><span class="line">	public GenericDAO(Class&lt;T&gt; clazz) &#123;</span><br><span class="line">		this.entityClass = clazz;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Autowired</span><br><span class="line">	private HibernateTemplate hibernateTemplate;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里用到了@Autowired注解，所以最终形成的war包，必须在spring配置文件中声明HibernateTemplate类型的bean，否则会报错 </p>
+<p>我这里用的maven环境是maven3.0.4，这个版本打出的jar包，带有Directory Entries信息，所以spring的注解即使在jar包中也可生效，如果是比较老的版本，spring的注解在jar包中不好用，关于这个问题的详细描述，见另外一篇博客：<a href="http://kyfxbl.iteye.com/blog/1675368" target="_blank" rel="noopener">directory entries</a>    </p>
+<h2 id="单元测试的写法"><a href="#单元测试的写法" class="headerlink" title="单元测试的写法"></a>单元测试的写法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@RunWith(SpringJUnit4ClassRunner.class)</span><br><span class="line">@ContextConfiguration(locations = &quot;classpath:spring-test.xml&quot;)</span><br><span class="line">@Transactional</span><br><span class="line">public class GenericDAOTest &#123;</span><br><span class="line"></span><br><span class="line">	@Autowired</span><br><span class="line">	private IBookDAO bookDAO;</span><br><span class="line"></span><br><span class="line">	@Test</span><br><span class="line">	public void testInsert() &#123;</span><br><span class="line">		Book book = new Book();</span><br><span class="line">		book.setName(&quot;thinking in java&quot;);</span><br><span class="line">		book.setIsbn(&quot;111&quot;);</span><br><span class="line">		bookDAO.insert(book);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里用到了几个注解，@RunWith是为了在spring容器环境下跑这个单元测试类，以支持依赖注入。@ContextConfiguration是声明spring配置文件的位置。@Transactional注解之后，在单元测试方法中的事务会自动回滚，这个比较方便，这样在前面执行的方法，不会对后面的方法造成影响 </p>
+<p>这个单元测试类，可以直接在maven里跑起来。之前这样写，在ant里跑没有成功，可能是我没有找到合适的插件的原因     </p>
+<h2 id="资源文件"><a href="#资源文件" class="headerlink" title="资源文件"></a>资源文件</h2><p>除了测试的java代码之外，还有3个资源文件，都是放在src/test/resources下，这些资源文件只在test阶段生效，package阶段不会被打包，也就是专门供测试阶段使用 </p>
+<p>这个各有利弊，优点是测试的配置文件与开发的配置文件隔离，互不干扰。缺点是配置文件似乎缺少了集中放置的地点，这样如果多个maven工程都需要跑单元测试，要共享测试用配置文件，比较麻烦一点 </p>
+<p>不过从我个人来看，也算是利大于弊。只是在每个maven项目下，都需要独立的测试相关资源文件，其实也有利于分别修改 </p>
+<p>另外，可以看到这里的hibernate映射文件，不是和model类放在一个package下，而是放在resources目录下的，这样做可以避免一些潜在的问题，也有利于后续的聚合     </p>
+<h2 id="pom文件"><a href="#pom文件" class="headerlink" title="pom文件"></a>pom文件</h2><p>没有什么特别的，只是要引入scope为test的junit和spring-test </p>
+<h1 id="task-sla"><a href="#task-sla" class="headerlink" title="task-sla"></a>task-sla</h1><p>该工程依赖task-common（因为用到了GenericDAO），是某一个业务模块的逻辑部分，包含了数据库访问层和业务逻辑层，但是不包括web相关的部分 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0080/1350/a1809ae2-f494-3267-9b9d-124cd1a4aa50.png" alt=""></p>
+<p>这里没有什么特别要注意的，目录结构和task-common基本一样。比较特别的是可以看到Maven Dependencies里，有一个task-common工程，所以task-common里的任何修改，都可以第一时间在这个工程里体现出来，是比较方便的。关于这个问题，见另外一篇博客：<a href="http://kyfxbl.iteye.com/blog/1679806" target="_blank" rel="noopener">设置依赖工程</a></p>
+<p>另外就是前面说过的，hibernate的映射文件，应该放在src/main/resources下，而不是与Model类放在一起 </p>
+<h1 id="task-sla-web"><a href="#task-sla-web" class="headerlink" title="task-sla-web"></a>task-sla-web</h1><p>这个工程是上述task-sla工程的web层，依赖于task-sla，由于task-sla又依赖task-common，所以这个工程最终会同时依赖task-common和task-sla </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0073/9563/55bb6102-cd77-3d23-9f8b-f66b78e0e4a9.png" alt=""></p>
+<p>然后这个工程里包含了web层的东西，包括Action类、jsp、图片、struts2的配置文件等，这些东西放在web工程里是最合适的 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0080/1352/bf1484d7-badb-32c3-8c79-4d9627a5788d.png" alt=""></p>
+<p>这里需要注意2点：     </p>
+<h2 id="packaging类型"><a href="#packaging类型" class="headerlink" title="packaging类型"></a>packaging类型</h2><p>这个工程的packaging类型是war，而不是jar。但是最终它不会独立打出war包来，其src/main/webapp里的所有文件，都会被最外围的task-web-dist工程聚合成一个总的war     </p>
+<h2 id="web-xml"><a href="#web-xml" class="headerlink" title="web.xml"></a>web.xml</h2><p>这个工程的WEB-INF目录下，没有web.xml（有也没用，最终会被覆盖）。默认情况下，packaging类型为war的项目，如果没有web.xml，则构建会失败，因此需要在pom里做一个配置。该项目的pom如下，省略了依赖部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">	&lt;parent&gt;</span><br><span class="line">		&lt;groupId&gt;com.xxx.task&lt;/groupId&gt;</span><br><span class="line">		&lt;artifactId&gt;task-aggregator&lt;/artifactId&gt;</span><br><span class="line">		&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;</span><br><span class="line">		&lt;relativePath&gt;../task-aggregator&lt;/relativePath&gt;</span><br><span class="line">	&lt;/parent&gt;</span><br><span class="line"></span><br><span class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">	&lt;artifactId&gt;task-sla-web&lt;/artifactId&gt;</span><br><span class="line">	&lt;packaging&gt;war&lt;/packaging&gt;</span><br><span class="line"></span><br><span class="line">	&lt;build&gt;</span><br><span class="line">		&lt;plugins&gt;</span><br><span class="line">			&lt;plugin&gt;</span><br><span class="line">				&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">				&lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;</span><br><span class="line">				&lt;configuration&gt;</span><br><span class="line">					&lt;failOnMissingWebXml&gt;false&lt;/failOnMissingWebXml&gt;</span><br><span class="line">				&lt;/configuration&gt;</span><br><span class="line">			&lt;/plugin&gt;</span><br><span class="line">		&lt;/plugins&gt;</span><br><span class="line">	&lt;/build&gt;</span><br><span class="line"></span><br><span class="line">	&lt;!-- 配置依赖 --&gt;</span><br><span class="line">	&lt;dependencies&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;spring-beans&lt;/artifactId&gt;</span><br><span class="line">		&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">	&lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
+<p>上面的<failonmissingwebxml>，就是配置缺少web.xml也不使构建失败 </failonmissingwebxml></p>
+<h1 id="task-web-dist"><a href="#task-web-dist" class="headerlink" title="task-web-dist"></a>task-web-dist</h1><p>这个工程是最外围的web工程，起到聚合的作用，即把所有的web项目，打成最终的war包。同时，在这个工程里，放置里公共的配置文件，比如struts.xml、ssoconfig.properties等 </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0073/9576/afe24b98-432a-3713-89b5-680efa58f01e.png" alt=""></p>
+<p>这个工程的聚合意图十分明显，比如struts.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE struts PUBLIC &quot;-//Apache Software Foundation//DTD Struts Configuration 2.3//EN&quot; &quot;http://struts.apache.org/dtds/struts-2.3.dtd&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;struts&gt;</span><br><span class="line"></span><br><span class="line">	&lt;constant name=&quot;struts.objectFactory&quot; value=&quot;spring&quot; /&gt;</span><br><span class="line">	&lt;constant name=&quot;struts.ui.theme&quot; value=&quot;simple&quot; /&gt;</span><br><span class="line">	&lt;constant name=&quot;struts.i18n.encoding&quot; value=&quot;UTF-8&quot; /&gt;</span><br><span class="line">	&lt;constant name=&quot;struts.action.extension&quot; value=&quot;action&quot; /&gt;</span><br><span class="line">	&lt;constant name=&quot;struts.enable.DynamicMethodInvocation&quot; value=&quot;false&quot; /&gt;</span><br><span class="line">	&lt;constant name=&quot;struts.devMode&quot; value=&quot;true&quot; /&gt;</span><br><span class="line"></span><br><span class="line">	&lt;include file=&quot;struts2/struts-sla.xml&quot; /&gt;</span><br><span class="line"></span><br><span class="line">&lt;/struts&gt;</span><br></pre></td></tr></table></figure>
+<p>提供了项目通用的配置，并把各子项目的struts2配置文件聚合起来。war包中的web.xml也是在这里提供的。下面是该工程的pom，也省略了依赖的配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">	&lt;parent&gt;</span><br><span class="line">		&lt;groupId&gt;com.xxx.task&lt;/groupId&gt;</span><br><span class="line">		&lt;artifactId&gt;task-aggregator&lt;/artifactId&gt;</span><br><span class="line">		&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;</span><br><span class="line">		&lt;relativePath&gt;../task-aggregator&lt;/relativePath&gt;</span><br><span class="line">	&lt;/parent&gt;</span><br><span class="line"></span><br><span class="line">	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">	&lt;artifactId&gt;task-web-dist&lt;/artifactId&gt;</span><br><span class="line">	&lt;packaging&gt;war&lt;/packaging&gt;</span><br><span class="line"></span><br><span class="line">	&lt;build&gt;</span><br><span class="line"></span><br><span class="line">		&lt;finalName&gt;task&lt;/finalName&gt;</span><br><span class="line"></span><br><span class="line">		&lt;plugins&gt;</span><br><span class="line"></span><br><span class="line">			&lt;!-- 合并多个war --&gt;</span><br><span class="line">			&lt;plugin&gt;</span><br><span class="line">				&lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">				&lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;</span><br><span class="line">				&lt;configuration&gt;</span><br><span class="line">					&lt;packagingExcludes&gt;WEB-INF/web.xml&lt;/packagingExcludes&gt;  </span><br><span class="line">					&lt;overlays&gt;</span><br><span class="line">						&lt;overlay&gt;</span><br><span class="line">							&lt;groupId&gt;com.huawei.inoc.wfm.task&lt;/groupId&gt;</span><br><span class="line">							&lt;artifactId&gt;task-sla-web&lt;/artifactId&gt;</span><br><span class="line">						&lt;/overlay&gt;</span><br><span class="line">					&lt;/overlays&gt;</span><br><span class="line">				&lt;/configuration&gt;</span><br><span class="line">			&lt;/plugin&gt;</span><br><span class="line"></span><br><span class="line">			&lt;!-- 利用cargo启动容器 --&gt;</span><br><span class="line">			&lt;plugin&gt;</span><br><span class="line">				&lt;groupId&gt;org.codehaus.cargo&lt;/groupId&gt;</span><br><span class="line">				&lt;artifactId&gt;cargo-maven2-plugin&lt;/artifactId&gt;</span><br><span class="line">				&lt;version&gt;1.2.3&lt;/version&gt;</span><br><span class="line">				&lt;configuration&gt;</span><br><span class="line">					&lt;container&gt;</span><br><span class="line">						&lt;containerId&gt;tomcat7x&lt;/containerId&gt;</span><br><span class="line">						&lt;home&gt;D:\apache-tomcat-7.0.29&lt;/home&gt;</span><br><span class="line">					&lt;/container&gt;</span><br><span class="line">					&lt;configuration&gt;</span><br><span class="line">						&lt;type&gt;standalone&lt;/type&gt;</span><br><span class="line">						&lt;home&gt;$&#123;project.build.directory&#125;/tomcat7.0.29&lt;/home&gt;</span><br><span class="line">						&lt;properties&gt;</span><br><span class="line">							&lt;cargo.jvmargs&gt;</span><br><span class="line">								-Xdebug</span><br><span class="line">								-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8787</span><br><span class="line">        					&lt;/cargo.jvmargs&gt;</span><br><span class="line">						&lt;/properties&gt;</span><br><span class="line">					&lt;/configuration&gt;</span><br><span class="line">				&lt;/configuration&gt;</span><br><span class="line">				&lt;executions&gt;</span><br><span class="line">					&lt;execution&gt;</span><br><span class="line">						&lt;id&gt;cargo-run&lt;/id&gt;</span><br><span class="line">						&lt;phase&gt;pre-integration-test&lt;/phase&gt;</span><br><span class="line">						&lt;goals&gt;</span><br><span class="line">							&lt;goal&gt;run&lt;/goal&gt;</span><br><span class="line">						&lt;/goals&gt;</span><br><span class="line">					&lt;/execution&gt;</span><br><span class="line">				&lt;/executions&gt;</span><br><span class="line">			&lt;/plugin&gt;</span><br><span class="line"></span><br><span class="line">		&lt;/plugins&gt;</span><br><span class="line"></span><br><span class="line">	&lt;/build&gt;</span><br><span class="line"></span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
+<p>这里主要是对maven-war-plugin和cargo-maven2-plugin这2个插件进行了配置，以起到聚合war，以及通过cargo启动容器的作用 </p>
+<p>关于多war聚合，以及cargo，见另外2篇博客：<a href="http://kyfxbl.iteye.com/blog/1678121" target="_blank" rel="noopener">多war聚合的maven工程</a>、<a href="http://kyfxbl.iteye.com/blog/1677608" target="_blank" rel="noopener">cargo应用</a> </p>
+<h1 id="启动构建"><a href="#启动构建" class="headerlink" title="启动构建"></a>启动构建</h1><p>在task-aggregator目录下，执行mvn clean deploy或者mvn clean install，就可启动整个构建过程，并将容器启动起来，跑最终生成的war包</p>
+<p><img src="http://dl.iteye.com/upload/attachment/0073/9581/b90b3452-33cb-3b94-b951-102604628ebb.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/用cargo插件部署war包，并支持debug/" rel="next" title="用cargo插件部署war包，并支持debug">
+                <i class="fa fa-chevron-left"></i> 用cargo插件部署war包，并支持debug
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/解决maven工程无法获取远程仓库上的构件/" rel="prev" title="解决maven工程无法获取远程仓库上的构件">
+                解决maven工程无法获取远程仓库上的构件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#工程介绍"><span class="nav-number">1.</span> <span class="nav-text">工程介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#task-aggregator"><span class="nav-number">2.</span> <span class="nav-text">task-aggregator</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#task-common"><span class="nav-number">3.</span> <span class="nav-text">task-common</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#在代码内部用了Spring的注解"><span class="nav-number">3.1.</span> <span class="nav-text">在代码内部用了Spring的注解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单元测试的写法"><span class="nav-number">3.2.</span> <span class="nav-text">单元测试的写法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#资源文件"><span class="nav-number">3.3.</span> <span class="nav-text">资源文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pom文件"><span class="nav-number">3.4.</span> <span class="nav-text">pom文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#task-sla"><span class="nav-number">4.</span> <span class="nav-text">task-sla</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#task-sla-web"><span class="nav-number">5.</span> <span class="nav-text">task-sla-web</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#packaging类型"><span class="nav-number">5.1.</span> <span class="nav-text">packaging类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#web-xml"><span class="nav-number">5.2.</span> <span class="nav-text">web.xml</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#task-web-dist"><span class="nav-number">6.</span> <span class="nav-text">task-web-dist</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动构建"><span class="nav-number">7.</span> <span class="nav-text">启动构建</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

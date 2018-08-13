@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文谈下我个人对“系统的扩展性”的看法。首先需要声明，这里的扩展性不是指伸缩性（scalability），而是指灵活性（flexibility）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="系统的扩展性">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/系统的扩展性/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="本文谈下我个人对“系统的扩展性”的看法。首先需要声明，这里的扩展性不是指伸缩性（scalability），而是指灵活性（flexibility）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="系统的扩展性">
+<meta name="twitter:description" content="本文谈下我个人对“系统的扩展性”的看法。首先需要声明，这里的扩展性不是指伸缩性（scalability），而是指灵活性（flexibility）">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/系统的扩展性/"/>
+
+
+
+
+
+  <title>系统的扩展性 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/系统的扩展性/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">系统的扩展性</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:14:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/架构设计/" itemprop="url" rel="index">
+                    <span itemprop="name">架构设计</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文谈下我个人对“系统的扩展性”的看法。首先需要声明，这里的扩展性不是指伸缩性（scalability），而是指灵活性（flexibility）<br><a id="more"></a></p>
+<h1 id="名词理解"><a href="#名词理解" class="headerlink" title="名词理解"></a>名词理解</h1><p>这里有2个关键词，一个是系统，一个是扩展性 </p>
+<p>那么要说明这个主题，就先要解释一下这2个关键词。按照我的习惯，还是从最小的东西开始举例子</p>
+<p>“系统”，我认为就是三要素，输入，逻辑，输出。按照这个定义，最小的系统就是一个方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public String sayHi(String name)&#123;</span><br><span class="line">    return &quot;hi &quot;+ name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我认为这个方法就是一个系统，输入是name，逻辑是加上一个”hi “，输出也是一个字符串 </p>
+<p>这三要素可以为空，比如有无参数的方法，无返回值的方法，或者没有业务逻辑的方法。。在极端情况下，甚至可以三要素都为空，不过就不具现实意义了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public void doNothing()&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法没有意义，不过不可否认它也是符合语法的，也有三要素，只不过都为空而已，所以我认为这个也可以算一个系统 </p>
+<p>因此，从方法往上延伸，类和模块也是系统；淘宝商城，去掉展现层，也是系统；常用的spring，一般认为是个框架，不过其实它也是系统；tomcat是一个servlet容器，但是它也是系统 </p>
+<p>下面解释我理解的扩展性。这个词我给不出精确的定义，所以只能用大白话加例子来说明。我认为扩展性就是“可变化”，或者说“没写死” </p>
+<p>比如说这个方法，我认为没有扩展性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public void sayHi()&#123;</span><br><span class="line">    System.out.println(&quot;hi kyfxbl&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>不管怎么调用，它也只能在屏幕上打出hi kyfxbl这句话，所以是“不可变”的，“写死了”，没有扩展性。加一个参数，就有扩展性了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public void sayHi(String name)&#123;</span><br><span class="line">    System.out.println(&quot;hi &quot; + name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法根据被调用时接受参数的不同，会呈现出不同的结果。结合第一点说的，方法也是系统，那么可以认为，这个方法，是一个最小的“有扩展性的系统” </p>
+<h1 id="系统即容器"><a href="#系统即容器" class="headerlink" title="系统即容器"></a>系统即容器</h1><p>上面为了解释清楚“系统”和“扩展性”的意思，选了很极端的例子，没有什么实际意义。现在就回到常见的场景中 </p>
+<p>还是以tomcat来举例子，tomcat作为一个servlet容器，也是一个运行的系统，而且是一个扩展性非常强的系统 </p>
+<p>当tomcat启动并加载一个web app的时候，它并不知道这个web app有哪些servlet规范规定的组件。有多少个Servlet，有没有Listener，都不清楚。但是当它启动web app初始化流程的时候，它就找到ContextListener的组件，然后实例化，再调用生命周期方法。所以如果我们的web app应用没有ContextListener，那么就不会执行；如果有一个，就执行一个；如果有两个，就执行两个</p>
+<p>这种感觉就像是，我们在给tomcat写插件一样，或者说我们在根据servlet规范的要求，写一些组件，然后放到servlet容器里运行起来 </p>
+<p>再举一个spring的例子，spring是常见框架，并且也是一个扩展性很强的系统。大部分情况下，我们只是使用spring提供的功能，比较少会去扩展它。但是实际上是可以扩展的。比如在ApplicationContext初始化的过程中，它会去调用PostBeanDefinitionProcess，PostBeanDefinitionProcess是一个接口，我们完全可以自己增加一个自定义的PostBeanDefinitionProcess实现类，放到配置文件里，那么也就会被spring给执行了</p>
+<p>这种情况下，spring的各个组件实际上都是在spring这个容器中运行的。spring容器本身运行的流程，是spring设计者规定的（相当于servlet的规范）。同时，设计者在流程中预先就保留了一些扩展点，等着后来的人（spring的用户）去自行扩展。因此，spring能不能扩展，能在哪些环节被扩展，是在设计的时候就决定的。试想如果rod johnson在一开始，就没有设计查找并执行PostBeanDefinitionProcess这个环节，那我们就不能在这个环节上对spring系统进行扩展了 </p>
+<p>日常我们写的系统，也是这样。以后能不能扩展，在哪里扩展，怎么扩展，都是在设计的时候就决定的。如果系统中，某个环节调用某个组件，都被固定下来，是“写死的”，那么这个环节就不具扩展性了。当然这个时候，系统依然是容器，只是容器中的组件是不可变的 </p>
+<h1 id="接口即设计"><a href="#接口即设计" class="headerlink" title="接口即设计"></a>接口即设计</h1><p>因此，为什么说接口就是设计呢，我认为就在这里。以前另外一篇博客，也谈到过接口的作用。当时我说的是，接口可以使两个模块之间的依赖减小。比如模块A依赖模块B，但是A只依赖B中的一个接口，那么不管模块B的内部实现怎么变，只要这个接口是稳定的，对A就没有影响 </p>
+<p>这里要说到接口的第二个作用，就是它关系到系统的扩展性。拿一段代码举例子：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public void process()&#123;</span><br><span class="line">    ComponentA a = new ComponentA();</span><br><span class="line">    a.doProcess();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这个方法就没有扩展性了，因为不管在任何情况下，调用process()方法，执行序列都是一样的。要想改变它，除非拿到源码，把ComponentA的实现改掉。当然在实际中，这是不可能的。那么如果是这样写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public void process()&#123;</span><br><span class="line">    Component a = searchForComponent();</span><br><span class="line">    a.doProcess();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>searchForComponent()方法的逻辑，是从配置文件里找到一个Component接口的实现类，实例化并返回，那么这个方法就很有扩展性了</p>
+<p>随时都可以自行实现一个实现Component接口的实现类，比如MySpecialComponent，放到配置文件里。那么这个方法运行时的逻辑，就完全是灵活的了 </p>
+<p>接口Component在这里，就是充当了一个占位符的作用，但同时又把整体的流程确定了下来，先找到实例，然后调用实例的方法。我们可以随意扩展Component，但是这个整体的流程却是不会改变的 </p>
+<p>联系上面的内容，这个process()方法（系统），也是一个容器。Component就是它的组件，是不确定的 </p>
+<p>想想前面举的tomcat和spring的例子，它们之所以有扩展性，就是因为容器本身的代码，用的是接口（ContextListener和PostBeanDefinitionProcess）来占位，而没有用实际的类把逻辑“写死”。但是整体的流程，是固定下来的。这里就体现了接口，对于设计的意义 </p>
+<h1 id="可扩展性的要素"><a href="#可扩展性的要素" class="headerlink" title="可扩展性的要素"></a>可扩展性的要素</h1><p>总结上面的例子，一个系统是否具有扩展性，是在设计之初就固定下来的。 </p>
+<p>那么系统要有扩展性，就至少需要3个要素： </p>
+<p>1、在规定了流程的前提下，允许某些环节扩展 </p>
+<p>2、将允许扩展的部分，以API的方式对外部提供 </p>
+<p>3、对外部提供规则 </p>
+<p>第1条前面已经说了很多了，第2条和第3条也很简单。servlet和spring是可以扩展的，但是如果没有拿到ContextListener和PostBeanDefinitionProcess这2个接口，又怎么能写出实现类呢。那也就只能看着系统运行默认组件了 </p>
+<p>但是提供API，不需要把整个系统的接口都暴露出去，提供必需的子集即可。比如只需要有servlet-api.jar，就可以开发servlet应用了，并不需要拿到catalina.jar。tomcat的源码里，大部分都是容器自身的实现，允许扩展的部分，仅仅通过servlet-api.jar来提供就足够了 </p>
+<p>对外部提供规则，就是告诉外部要怎么扩展。容器是别人设计的，用户怎么知道要怎么扩展呢？当然就需要容器的设计者来提供信息。告诉用户，你可以实现ContextListener接口，然后在web.xml里配置一下</p>
+<h1 id="插件设计"><a href="#插件设计" class="headerlink" title="插件设计"></a>插件设计</h1><p>写本文的原因，其实是最近在分析一个系统。这两天在研究它的插件体系，想到这么多就写下来 </p>
+<p>搞清楚上面的内容，插件也就不复杂了。从用户的角度来看，要写一个插件，就是拿到API，然后按照规则写扩展组件。从系统（容器）设计者的角度看，我的系统要支持插件扩展，就是： </p>
+<p>1、规定流程，设计扩展点（包括加载机制） </p>
+<p>2、把扩展点打包成API，作为二次开发的SDK提供给用户 </p>
+<p>3、告诉用户，应该怎么使用这个API</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/我对协议的理解/" rel="next" title="我对协议的理解">
+                <i class="fa fa-chevron-left"></i> 我对协议的理解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/spring加载外部的配置文件和类/" rel="prev" title="spring加载外部的配置文件和类">
+                spring加载外部的配置文件和类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#名词理解"><span class="nav-number">1.</span> <span class="nav-text">名词理解</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系统即容器"><span class="nav-number">2.</span> <span class="nav-text">系统即容器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口即设计"><span class="nav-number">3.</span> <span class="nav-text">接口即设计</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#可扩展性的要素"><span class="nav-number">4.</span> <span class="nav-text">可扩展性的要素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#插件设计"><span class="nav-number">5.</span> <span class="nav-text">插件设计</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

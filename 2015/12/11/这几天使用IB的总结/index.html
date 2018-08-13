@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这几天尝试了使用Interface Builder，跟以前用纯代码开发还是有比较明显的区别，本文总结一下这几天的感受">
+<meta property="og:type" content="article">
+<meta property="og:title" content="这几天使用IB的总结">
+<meta property="og:url" content="http://yoursite.com/2015/12/11/这几天使用IB的总结/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="这几天尝试了使用Interface Builder，跟以前用纯代码开发还是有比较明显的区别，本文总结一下这几天的感受">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://pic.kyfxbl.com/ib.jpg">
+<meta property="og:image" content="http://pic.kyfxbl.com/ib2.jpg">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="这几天使用IB的总结">
+<meta name="twitter:description" content="这几天尝试了使用Interface Builder，跟以前用纯代码开发还是有比较明显的区别，本文总结一下这几天的感受">
+<meta name="twitter:image" content="http://pic.kyfxbl.com/ib.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/12/11/这几天使用IB的总结/"/>
+
+
+
+
+
+  <title>这几天使用IB的总结 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/12/11/这几天使用IB的总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">这几天使用IB的总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-11T00:21:10+09:00">
+                2015-12-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这几天尝试了使用Interface Builder，跟以前用纯代码开发还是有比较明显的区别，本文总结一下这几天的感受<br><a id="more"></a></p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>总的来说，在IB里的操作，会在编译时由xcode生成代码，本质上和纯代码是一样的。但是通过IB的方式，可以用更少的代码实现同样的功能</p>
+<p>比如说segue，实际上还是会生成pushViewController或者presentViewController的调用。以及各种组件的实例化，也都会生成init的调用等</p>
+<p>以下总结一下IB里的各种操作，与代码的对应关系</p>
+<h1 id="实例化"><a href="#实例化" class="headerlink" title="实例化"></a>实例化</h1><p>在IB里拖出一个UITableViewController，那么xcode会自动创建TableView的实例，并调用相应的init方法。类似的，将一个ViewController嵌套在NavigationController里，xcode也会自动创建这2个实例，并将ViewController设置成rootViewController</p>
+<p>纯代码实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HomeIndexController *vc = [[HomeIndexController alloc] init];</span><br><span class="line">UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];</span><br></pre></td></tr></table></figure></p>
+<p>不仅如此，在ViewController的生命周期里，各种loadView，以及View的实例化，也都可以在IB里完成大部分</p>
+<h1 id="通过IBOutlet获取引用"><a href="#通过IBOutlet获取引用" class="headerlink" title="通过IBOutlet获取引用"></a>通过IBOutlet获取引用</h1><p>IBOutlet解决的是获取引用的问题</p>
+<p>比如ViewController需要拿到UILabel和UIButton的引用，纯代码的方式可能是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@property UILabel *label;</span><br><span class="line"></span><br><span class="line">MyView *view = (MyView*)self.view;</span><br><span class="line">UILabel* theLabel = view.label;</span><br></pre></td></tr></table></figure></p>
+<p>而在IB里，只需要从storyboard里拖出一个IBOutlet到ViewController里就可以了</p>
+<h1 id="设置各种属性"><a href="#设置各种属性" class="headerlink" title="设置各种属性"></a>设置各种属性</h1><p>比如要设置一个UIView可点击，纯代码的方式是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.userInteractionEnabled = YES;</span><br></pre></td></tr></table></figure></p>
+<p>或者其他的属性，如backgroundColor等都是类似的，在IB里可以直接设置<br><img src="http://pic.kyfxbl.com/ib.jpg" alt=""></p>
+<h1 id="设置delegate和dataSource"><a href="#设置delegate和dataSource" class="headerlink" title="设置delegate和dataSource"></a>设置delegate和dataSource</h1><p>也可以在IB里直接完成：<br><img src="http://pic.kyfxbl.com/ib2.jpg" alt=""></p>
+<h1 id="通过IBAction设置交互行为"><a href="#通过IBAction设置交互行为" class="headerlink" title="通过IBAction设置交互行为"></a>通过IBAction设置交互行为</h1><p>设置target-action也是非常常见的情况，纯代码方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[button addTarget:controller action:@selector(backButtonPress) forControlEvents:UIControlEventTouchUpInside];</span><br></pre></td></tr></table></figure></p>
+<p>另外一种是设置手势响应，纯代码方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)]];</span><br></pre></td></tr></table></figure></p>
+<p>这2种情况都可以通过拉出一个IBAction来替代</p>
+<h1 id="controller跳转"><a href="#controller跳转" class="headerlink" title="controller跳转"></a>controller跳转</h1><p>代码的方式一般是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[navigationController pushViewController:controller animated: YES];</span><br></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[controller presentViewController:photoSlider animated:YES completion:nil];</span><br></pre></td></tr></table></figure></p>
+<p>而返回上一个controller，纯代码实现是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[navigationController popViewControllerAnimated: YES];</span><br></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[self dismissViewControllerAnimated:NO completion:nil];</span><br></pre></td></tr></table></figure></p>
+<p>这种跳转的场景可以通过segue和unwind segue来替代</p>
+<h1 id="缩小IB中controller的面积"><a href="#缩小IB中controller的面积" class="headerlink" title="缩小IB中controller的面积"></a>缩小IB中controller的面积</h1><p>controller在IB里会特别大，如果用外接显示器还好，如果是用macbook开发，编辑storyboard的时候会特别吃力</p>
+<p>其实可以双击空白区域，会把controller缩小，可视范围就大多了</p>
+<h1 id="单元测试特别方便"><a href="#单元测试特别方便" class="headerlink" title="单元测试特别方便"></a>单元测试特别方便</h1><p>我手头的版本是xcode7.1.1，这个版本单元测试非常方便，只要继承XCTestCase就可以，点击左侧的小菱形就可以直接跑单元测试，比以前的版本方便很多，可以多写点单元测试了</p>
+<h1 id="关于布局和约束的问题"><a href="#关于布局和约束的问题" class="headerlink" title="关于布局和约束的问题"></a>关于布局和约束的问题</h1><p>以前我一般是用masonry来写约束，还是比较熟练的。代码类似：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[phoneLabel mas_makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">            make.left.equalTo(@10);</span><br><span class="line">            make.top.equalTo(@0);</span><br><span class="line">            make.width.equalTo(@80);</span><br><span class="line">            make.height.equalTo(@50);</span><br><span class="line">        &#125;];</span><br><span class="line">        </span><br><span class="line">        [_phoneInput mas_makeConstraints:^(MASConstraintMaker *make) &#123;</span><br><span class="line">            make.left.equalTo(phoneLabel.mas_right);</span><br><span class="line">            make.right.equalTo(@-10);</span><br><span class="line">            make.top.equalTo(phoneLabel);</span><br><span class="line">            make.height.equalTo(phoneLabel);</span><br><span class="line">        &#125;];</span><br></pre></td></tr></table></figure></p>
+<p>基本上就是各种init和addSubview之后，开始用masonry来写约束</p>
+<p>而在IB里，也是通过拖动的方式来做的，一种做法是在Pin面板里设置，另一种做法是直接在组件上control + drag，还可以在size inspector里编辑。反正挺麻烦的，我现在还不太熟练，基本上还是用masonry的思路在做</p>
+<h1 id="IB的缺点"><a href="#IB的缺点" class="headerlink" title="IB的缺点"></a>IB的缺点</h1><p>IB最大的优势当然就是节省代码，这是毋庸置疑的。但是IB也有劣势</p>
+<p>首先是多人协作开发的时候，虽然xcode已经多次优化过，conflict问题始终不能很完美地解决。毕竟merge代码很容易，要merge XML文件实在是有点困难</p>
+<p>其次是我仍然认为代码更加直观，比如一个控件的属性等，在代码里比较集中，而在IB里就要分散到各个地方去找了。有时候出现一些很诡异的问题，比较难定位。比如下面这个问题</p>
+<h1 id="UIImageView约束失效的诡异问题"><a href="#UIImageView约束失效的诡异问题" class="headerlink" title="UIImageView约束失效的诡异问题"></a>UIImageView约束失效的诡异问题</h1><p>今天我拖出了一个UITableViewController，然后在自定义的cell里放了一个UIImageView，并且设置好了约束。结果我发现这个ImageView老是变形，检查了好几遍约束，始终没发现问题</p>
+<p>最后在connections inspector里发现，我不知道什么时候不小心把这个ImageView拖了2个IBOutlet到自定义的Cell类里，于是xcode生成代码的时候就出错了。最后把2个Outlet都删掉，重新拖了一次就好了</p>
+<p>像这种问题，真心难发现，如果是纯写代码，就不会发生这种事了</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/10/21/从web页面打开iOS应用/" rel="next" title="从web页面打开iOS应用">
+                <i class="fa fa-chevron-left"></i> 从web页面打开iOS应用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/27/用CALayer绘图/" rel="prev" title="用CALayer绘图">
+                用CALayer绘图 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#原理"><span class="nav-number">1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实例化"><span class="nav-number">2.</span> <span class="nav-text">实例化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#通过IBOutlet获取引用"><span class="nav-number">3.</span> <span class="nav-text">通过IBOutlet获取引用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置各种属性"><span class="nav-number">4.</span> <span class="nav-text">设置各种属性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设置delegate和dataSource"><span class="nav-number">5.</span> <span class="nav-text">设置delegate和dataSource</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#通过IBAction设置交互行为"><span class="nav-number">6.</span> <span class="nav-text">通过IBAction设置交互行为</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#controller跳转"><span class="nav-number">7.</span> <span class="nav-text">controller跳转</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缩小IB中controller的面积"><span class="nav-number">8.</span> <span class="nav-text">缩小IB中controller的面积</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#单元测试特别方便"><span class="nav-number">9.</span> <span class="nav-text">单元测试特别方便</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于布局和约束的问题"><span class="nav-number">10.</span> <span class="nav-text">关于布局和约束的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IB的缺点"><span class="nav-number">11.</span> <span class="nav-text">IB的缺点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UIImageView约束失效的诡异问题"><span class="nav-number">12.</span> <span class="nav-text">UIImageView约束失效的诡异问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

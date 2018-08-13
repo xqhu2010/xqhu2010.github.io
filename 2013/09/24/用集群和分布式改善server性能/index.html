@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="性能是一个多方面综合的结果，遵循短板理论。系统中任何一个部分成为性能瓶颈，都会影响整个系统的性能表现。本文浅谈对集群、分布式、性能的理解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用集群和分布式改善server性能">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/用集群和分布式改善server性能/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="性能是一个多方面综合的结果，遵循短板理论。系统中任何一个部分成为性能瓶颈，都会影响整个系统的性能表现。本文浅谈对集群、分布式、性能的理解">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用集群和分布式改善server性能">
+<meta name="twitter:description" content="性能是一个多方面综合的结果，遵循短板理论。系统中任何一个部分成为性能瓶颈，都会影响整个系统的性能表现。本文浅谈对集群、分布式、性能的理解">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/用集群和分布式改善server性能/"/>
+
+
+
+
+
+  <title>用集群和分布式改善server性能 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/用集群和分布式改善server性能/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">用集群和分布式改善server性能</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:23:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/架构设计/" itemprop="url" rel="index">
+                    <span itemprop="name">架构设计</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>性能是一个多方面综合的结果，遵循短板理论。系统中任何一个部分成为性能瓶颈，都会影响整个系统的性能表现。本文浅谈对集群、分布式、性能的理解<br><a id="more"></a></p>
+<h1 id="性能有不同的维度"><a href="#性能有不同的维度" class="headerlink" title="性能有不同的维度"></a>性能有不同的维度</h1><p>首先要理解，“性能”这个词本身并不准确。server的性能有多个维度。比如吞吐量、QPS、单次请求响应时间，就是衡量性能指标的不同维度，有时是需要权衡的</p>
+<p>比如说通常情况下，用异步处理可以提升server的吞吐量，但是对于单个请求来说，反而会增加响应时间</p>
+<p>因为对于单次请求，需要进行的操作是固定的。如果这个请求需要查询数据库，或者调用另一个web service，那么异步处理并不能缩短总时间。node采用事件驱动的异步处理，缩短的并不是单次请求的响应时长。而是从整个server的角度看，线程不需要等待阻塞操作返回，而是可以继续去响应另一个请求，因此提升了整体性能。此外，node设计为单线程的，因此减少了线程切换的CPU开销，也占用更少的RAM；而且node底层的libev，libeio等库，对操作系统的异步操作做了良好的封装，也是node性能较好的原因之一</p>
+<h1 id="改善性能是每个环节配合的结果"><a href="#改善性能是每个环节配合的结果" class="headerlink" title="改善性能是每个环节配合的结果"></a>改善性能是每个环节配合的结果</h1><p>对于web应用，首先第一步是响应HTTP请求，即使后端的性能再好，如果在这里出现瓶颈，整个系统的性能也会很差，类似于一个很大的水瓶，但是入水口很小。在这个环节，可以通过DNS分流，负载均衡等方式改善。另外，现在高性能的HTTP服务器（Nginx、node.js等）本身，由于采用了事件通知等设计方式，单个线程可以响应多个HTTP请求，减少了线程创建和切换的开销（CPU与内存），也可以显著提升响应HTTP请求的性能 </p>
+<p>接受请求之后，则进入系统后端进行业务逻辑处理，在这里也会产生性能瓶颈。通过集群的方式，可以有效改善。因为单台服务器的硬件总是有限的，受限于CPU和内存，单台机器能够处理的负载终究是有限的，这时可以采用集群方案，将请求分摊到不同的服务器上处理。这对应用的实现本身是有要求的，基本上要求应用是“无状态”的。比如如果应用的业务逻辑依赖session，那么集群就无法简单地实现，还需要加入session同步的策略等。另外应用本身的代码也会有影响，比如在关键路径上使用了synchronized，那么就只能串行处理，对性能肯定有影响 </p>
+<p>集群不等于分布式。当应用的规模大到一定程度，简单的集群也无法支撑，这时候往往还需要考虑分布式，对系统进行拆分，充分利用硬件的性能，达到最大的扩展性。此外，即使不考虑性能，将系统拆分，实现“服务化”，对于功能的扩展也是很有帮助的。比如说，只有单个系统时，用户管理可以和业务系统放在一起；但是当应用规模不断增大，有100个系统，那么把用户管理拆分出来，就可以在100个系统中实现这部分功能的共享 </p>
+<p>最后到了持久层，这里往往会涉及到大量的IO读写，这是最容易产生性能瓶颈的地方。传统的RDBMS本质上是一个单机系统，并且需要遵循ACID的约束。所以传统的关系数据库的扩展性是很差的。比如说，我们用到了数据库集群，这可以解决服务可用性的问题（主备倒换），容灾的问题（数据冗余），对性能也有一定的帮助（同时响应更多的数据库连接请求）。但是仅仅这样还不够，因为前面说过RDBMS本质上是单机系统，即使用了集群亦然。集群仅仅解决了多连接并发的问题，但是数据库本身插入、查询，涉及到大量的IO，就已经成为了瓶颈，尤其在数据量很大的情况就更加明显。所以仅仅是集群还不够，这时候就需要分表（水平拆分），这对系统的代码就有要求，什么样的数据，要到哪个表里查询，都需要遵循一定的规则。有一个办法是，将数据库路由的功能放在JDBC之下，数据库之上，这样应用就只需要连接到这个数据库路由层，不用关心表的实际位置。随着数据库复杂度的上升，本来很好用的ORM，也就越来越捉襟见肘了</p>
+<p>数据规模越来越大，遇到即使拆表也无法解决问题的时候，就需要考虑RDBMS之外的方案。比如键值数据库（Redis、Tair）、文档数据库（MongoDB）等NOSQL技术，甚至还有文件系统（GFS、TFS），当然缓存也是很常见的重要方案 </p>
+<p>总的来说，性能是一个很大的话题。为了实现高性能，系统的架构是随着业务的发展，逐步演化的，从一开始就设计一个大规模的架构，绝非明智之举。“先实现功能，再按需优化”，才是比较好的策略。在这个过程中，既需要前瞻的眼光，也需要推倒重来的勇气 </p>
+<p>如同DOTA的路人和CW是2个不同的游戏一样；同样的应用，在小规模场景，和大规模场景（高并发、海量数据）下，也是完全不同的两回事，为了实现同样的功能，架构和实现上可能是千差万别的</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/关于JNDI/" rel="next" title="关于JNDI">
+                <i class="fa fa-chevron-left"></i> 关于JNDI
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/对分布式和集群的理解/" rel="prev" title="对分布式和集群的理解">
+                对分布式和集群的理解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#性能有不同的维度"><span class="nav-number">1.</span> <span class="nav-text">性能有不同的维度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#改善性能是每个环节配合的结果"><span class="nav-number">2.</span> <span class="nav-text">改善性能是每个环节配合的结果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

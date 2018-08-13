@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="今天终于通过FMDatabaseQueue解决了多线程同时访问数据库时，数据库锁定的问题，错误信息是：Unknown error finalizing or resetting statement (5: database is locked)，本文总结一下：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用FMDB多线程访问数据库，及database is locked的问题">
+<meta property="og:url" content="http://yoursite.com/2014/07/25/使用FMDB多线程访问数据库，及database is locked的问题/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="今天终于通过FMDatabaseQueue解决了多线程同时访问数据库时，数据库锁定的问题，错误信息是：Unknown error finalizing or resetting statement (5: database is locked)，本文总结一下：">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用FMDB多线程访问数据库，及database is locked的问题">
+<meta name="twitter:description" content="今天终于通过FMDatabaseQueue解决了多线程同时访问数据库时，数据库锁定的问题，错误信息是：Unknown error finalizing or resetting statement (5: database is locked)，本文总结一下：">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2014/07/25/使用FMDB多线程访问数据库，及database is locked的问题/"/>
+
+
+
+
+
+  <title>使用FMDB多线程访问数据库，及database is locked的问题 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/07/25/使用FMDB多线程访问数据库，及database is locked的问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用FMDB多线程访问数据库，及database is locked的问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2014-07-25T18:38:00+09:00">
+                2014-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天终于通过FMDatabaseQueue解决了多线程同时访问数据库时，数据库锁定的问题，错误信息是：Unknown error finalizing or resetting statement (5: database is locked)，本文总结一下：<br><a id="more"></a></p>
+<h1 id="FMDatabase不能多线程使用同一个实例"><a href="#FMDatabase不能多线程使用同一个实例" class="headerlink" title="FMDatabase不能多线程使用同一个实例"></a>FMDatabase不能多线程使用同一个实例</h1><p>多线程访问数据库，不能使用同一个FMDatabase的实例，否则会发生异常。如果线程使用单独的FMDatabase实例是允许的，但是同样有可能发生database is locked的问题。这是由于多线程对sqlite的竞争引起的</p>
+<p>我的app一开始就是多线程使用单独的FMDatabase实例访问数据库，虽然没有引起crash，但是还是出现了database is locked问题，造成很多数据没有如预期写入数据库</p>
+<h1 id="使用FMDatabaseQueue，问题依旧"><a href="#使用FMDatabaseQueue，问题依旧" class="headerlink" title="使用FMDatabaseQueue，问题依旧"></a>使用FMDatabaseQueue，问题依旧</h1><p>后来上FMDB的官网看了文档，确认用FMDatabaseQueue可以解决这个问题，API也比较简单：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NSString *dbFilePath = [PathResolver databaseFilePath];</span><br><span class="line">queue = [FMDatabaseQueue databaseQueueWithPath:dbFilePath];</span><br><span class="line">[queue inDatabase:^(FMDatabase *db)&#123;</span><br><span class="line">    // access db</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>但是实际测试了一下，还是database is locked</p>
+<p>读了一下相关的源码，FMDatabaseQueue解决这个问题的思路是：创建一个队列，然后将放入队列的block顺序执行，这样避免了多线程同时访问数据库</p>
+<p>而我的代码是多线程各创建FMDatabaseQueue的实例，所以其实有多个队列，因此还是存在数据库竞争的问题，和用FMDatabase时是一样的</p>
+<h1 id="共享同一个FMDatabaseQueue实例"><a href="#共享同一个FMDatabaseQueue实例" class="headerlink" title="共享同一个FMDatabaseQueue实例"></a>共享同一个FMDatabaseQueue实例</h1><p>于是接下来我让每个线程使用同一个Queue实例，问题就顺利解决了</p>
+<p>实现的方式，一开始我想给FMDatabase增加一个单例方法，但是这样以后升级FMDB会比较麻烦，所以最后我是创建了一个Helper类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">@implementation LosDatabaseHelper</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    FMDatabaseQueue* queue;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(id) init</span><br><span class="line">&#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if(self)&#123;</span><br><span class="line">        NSString *dbFilePath = [PathResolver databaseFilePath];</span><br><span class="line">        queue = [FMDatabaseQueue databaseQueueWithPath:dbFilePath];</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+(LosDatabaseHelper*) sharedInstance</span><br><span class="line">&#123;</span><br><span class="line">    static dispatch_once_t pred = 0;</span><br><span class="line">    __strong static id _sharedObject = nil;</span><br><span class="line">    dispatch_once(&amp;pred, ^&#123;</span><br><span class="line">        _sharedObject = [[self alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    return _sharedObject;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void) inDatabase:(void(^)(FMDatabase*))block</span><br><span class="line">&#123;</span><br><span class="line">    [queue inDatabase:^(FMDatabase *db)&#123;</span><br><span class="line">        block(db);</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>系统中其他的类，使用这个Helper类的单例，这样保证了全局只有唯一的FMDatabaseQueue实例。注意，因为Helper内部持有的是FMDatabaseQueue，所以可以这么做，如果包装的是FMDatabase类，就绝对会有问题。因为FMDatabase实例不能在多线程环境共享</p>
+<h1 id="使用FMDatabaseQueue之后，管理db"><a href="#使用FMDatabaseQueue之后，管理db" class="headerlink" title="使用FMDatabaseQueue之后，管理db"></a>使用FMDatabaseQueue之后，管理db</h1><p>原本使用FMDatabase类，需要手工调用db的open和close方法</p>
+<p>但是用FMDatabaseQueue，不需要调用open，因为查看代码发现，Queue已经open了。至于要不要close，我也不确定，因为官方的sample code没有调用close。实际应用中，我也没有调用，好像没有问题。如果需要close的话，我想可以在Helper类的公共方法里增加调用close queue就可以了。下面是close的源码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (void)close &#123;</span><br><span class="line">    FMDBRetain(self);</span><br><span class="line">    dispatch_sync(_queue, ^() &#123; </span><br><span class="line">        [_db close];</span><br><span class="line">        FMDBRelease(_db);</span><br><span class="line">        _db = 0x00;</span><br><span class="line">    &#125;);</span><br><span class="line">    FMDBRelease(self);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以，使用Queue，是不需要自己打开和关闭db的。但是如果使用了FMResultSet，rs倒是需要关闭，否则会报warning：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if ([db hasOpenResultSets]) &#123;</span><br><span class="line">    NSLog(@&quot;Warning: there is at least one open result set around after performing [FMDatabaseQueue inDatabase:]&quot;);</span><br></pre></td></tr></table></figure>
+<p>为了不看到warning，我都在block里调用了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[rs close]</span><br></pre></td></tr></table></figure>
+<h1 id="刷新数据库文件路径"><a href="#刷新数据库文件路径" class="headerlink" title="刷新数据库文件路径"></a>刷新数据库文件路径</h1><p>具体到我们的应用，还有一个特殊问题需要考虑。因为我们的APP可以切换账户，而账户的db文件是独立的。所以当用户重新登录的时候，需要刷新一下Helper的queue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+(void) refreshDatabaseFile</span><br><span class="line">&#123;</span><br><span class="line">    LosDatabaseHelper *instance = [self sharedInstance];</span><br><span class="line">    [instance doRefresh];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void) doRefresh</span><br><span class="line">&#123;</span><br><span class="line">    NSString *dbFilePath = [PathResolver databaseFilePath];</span><br><span class="line">    queue = [FMDatabaseQueue databaseQueueWithPath:dbFilePath];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果不这么做，由于Helper是单例，那么切换账户以后，用户B访问的还是用户A的数据库。刷新的调用，一般放在登录之后，进入主页面之前就可以了</p>
+<h1 id="队列和线程"><a href="#队列和线程" class="headerlink" title="队列和线程"></a>队列和线程</h1><p>在debug过程中，顺便看到一个现象。虽然多个block都是放到同一个队列里，但是其实是跑在不同的thread里</p>
+<p>不要混淆队列和线程的概念，使用GCD时，开发者关注的是把block放到队列中，但是同一个队列其实可以对应多个thread，为block分配thread，是GCD框架负责的，开发者不需要关注。只要把操作放到合适的队列里，GCD就会完成线程的创建，分配与回收</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/07/24/优化TableView索引排序的性能/" rel="next" title="优化TableView索引排序的性能">
+                <i class="fa fa-chevron-left"></i> 优化TableView索引排序的性能
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/07/30/使用事务提升sqlite insert的性能/" rel="prev" title="使用事务提升sqlite insert的性能">
+                使用事务提升sqlite insert的性能 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#FMDatabase不能多线程使用同一个实例"><span class="nav-number">1.</span> <span class="nav-text">FMDatabase不能多线程使用同一个实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用FMDatabaseQueue，问题依旧"><span class="nav-number">2.</span> <span class="nav-text">使用FMDatabaseQueue，问题依旧</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#共享同一个FMDatabaseQueue实例"><span class="nav-number">3.</span> <span class="nav-text">共享同一个FMDatabaseQueue实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用FMDatabaseQueue之后，管理db"><span class="nav-number">4.</span> <span class="nav-text">使用FMDatabaseQueue之后，管理db</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#刷新数据库文件路径"><span class="nav-number">5.</span> <span class="nav-text">刷新数据库文件路径</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#队列和线程"><span class="nav-number">6.</span> <span class="nav-text">队列和线程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

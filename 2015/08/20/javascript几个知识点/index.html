@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文总结一下javascript几个比较重要的知识点，包括scope chain，this，和函数的一些高级特性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="javascript几个知识点">
+<meta property="og:url" content="http://yoursite.com/2015/08/20/javascript几个知识点/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="本文总结一下javascript几个比较重要的知识点，包括scope chain，this，和函数的一些高级特性">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="javascript几个知识点">
+<meta name="twitter:description" content="本文总结一下javascript几个比较重要的知识点，包括scope chain，this，和函数的一些高级特性">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/08/20/javascript几个知识点/"/>
+
+
+
+
+
+  <title>javascript几个知识点 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/08/20/javascript几个知识点/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">javascript几个知识点</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-08-20T11:31:18+09:00">
+                2015-08-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/javascript/" itemprop="url" rel="index">
+                    <span itemprop="name">javascript</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文总结一下javascript几个比较重要的知识点，包括scope chain，this，和函数的一些高级特性<br><a id="more"></a></p>
+<h1 id="scope-chain"><a href="#scope-chain" class="headerlink" title="scope chain"></a>scope chain</h1><p>scope chain是javascript函数调用里最核心的概念，尤其是要理解闭包的概念的话，必须先了解scope chain的原理</p>
+<h2 id="函数在scope-chain上查找变量"><a href="#函数在scope-chain上查找变量" class="headerlink" title="函数在scope chain上查找变量"></a>函数在scope chain上查找变量</h2><p>function执行时，会在scope chain自底向上地查找变量。scope chain的第一个对象是自己的调用对象（activation object），然后是外层的function的调用对象，然后是更外层的调用对象，直到global object</p>
+<p>如这段代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function wrapper()&#123;</span><br><span class="line"></span><br><span class="line">    var name = &quot;kyfxbl&quot;;</span><br><span class="line"></span><br><span class="line">    function inner()&#123;</span><br><span class="line">        console.log(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    inner();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>inner执行时，自己的调用对象上没有变量name，于是在wrapper的调用对象上查找。如果wrapper的调用对象上也没有，就去全局变量里找</p>
+<h2 id="scope-chain在函数定义时确定"><a href="#scope-chain在函数定义时确定" class="headerlink" title="scope chain在函数定义时确定"></a>scope chain在函数定义时确定</h2><p>javascript的作用域规则是词法作用域，也就是说，函数的scope chain是在定义时决定的，而不是调用时才决定</p>
+<p>比如这段代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function wrapper()&#123;</span><br><span class="line"></span><br><span class="line">    var scope = &quot;local&quot;;</span><br><span class="line"></span><br><span class="line">    return function()&#123;</span><br><span class="line">        console.log(scope);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var f = wrapper();</span><br><span class="line"></span><br><span class="line">var scope = &quot;global&quot;;</span><br><span class="line"></span><br><span class="line">f();</span><br></pre></td></tr></table></figure>
+<p>返回的那个匿名函数，其作用域在wrapper()执行时就确定了：self call object -&gt; wrapper call object -&gt; global object。而不是当执行f()的时候才决定</p>
+<h2 id="scope-chain上的调用对象可修改"><a href="#scope-chain上的调用对象可修改" class="headerlink" title="scope chain上的调用对象可修改"></a>scope chain上的调用对象可修改</h2><p>虽然一个函数在定义的时候，scope chain就已经确定了，但是只是确定了scope chain上包含哪些对象。这些对象的属性可以改变，比如这段代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">function wrapper()&#123;</span><br><span class="line"></span><br><span class="line">    var name = &quot;original&quot;;</span><br><span class="line"></span><br><span class="line">    function setName(new_name)&#123;</span><br><span class="line">        name = new_name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function getName()&#123;</span><br><span class="line">        console.log(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return [setName, getName];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var funcs = wrapper();</span><br><span class="line"></span><br><span class="line">funcs[1]();// original</span><br><span class="line">funcs[0](&quot;new_name&quot;);</span><br><span class="line">funcs[1]();// new_name</span><br></pre></td></tr></table></figure>
+<p>wrapper()被调用时，定义了2个函数。这2个函数的scope chain上，共享着wrapper的call object。所以调用setName()改变name的值，会对getName()也产生影响。scope chain是确定的，但是其中对象的属性却是可以修改的</p>
+<h2 id="闭包（closure）如何形成"><a href="#闭包（closure）如何形成" class="headerlink" title="闭包（closure）如何形成"></a>闭包（closure）如何形成</h2><p>简单而言，当嵌套函数做为返回值，被外部的变量引用，或者作为外部对象的属性时，闭包就形成了。形成闭包之后，scope chain上的调用对象，都能继续使用，而不会立刻被垃圾回收。犀牛书上有更详细的描述：</p>
+<p>a function is executed in the scope in which it was defined. When a function is invoked, a call object is created for it and placed on the scope chain. When the function exits, the call object is removed from the scope chain. When no nested functions are involved, the scope chain is the only reference to the call object. When the object is removed from the chain, there are no more references to it, and it ends up being garbage collected. But nested functions change the picture. If a nested function is created, the definition of that function refers to the call objects because that call object is the top of the scope chain in which the function was defined. If the nested function is used only within the outer function, however, the only reference to the nested function is in the call object. When the outer function returns, the nested function refers to the call object, and the call object refers to nested function, but there are no other references to either one, and so both objects become available for garbage collection. Things are different if you save a reference to the nested function in the global scope. You do so by using the nested function as the return value of the outer function or by storing the nested function as the property of some other object. In this case, there is an external reference to the nested function, and the nested function retains its reference to the call object of the outer function. The upshot is that the call object for that one particular invocation of the outer function continues to live, and the names and values of the function arguments and local variables persist in this object. JavaScript code cannot directly access the call object in any way, but the properties it defines are part of the scope chain for any invocation of the nested function.</p>
+<h2 id="所有变量都是某个对象的属性"><a href="#所有变量都是某个对象的属性" class="headerlink" title="所有变量都是某个对象的属性"></a>所有变量都是某个对象的属性</h2><ol>
+<li>在function内部，通过var声明的变量，是临时变量，本质上是调用对象的属性</li>
+<li>在function内部，用function声明的函数，也是临时变量</li>
+<li>在function内部，不通过var声明的变量，是全局变量，本质上是全局对象的属性。如果使用strict模式，这种写法是被禁止的，解释器会直接报错</li>
+<li>不在任何function内部，声明的变量，是全局变量</li>
+</ol>
+<p>以下示例代码可以说明：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(function()&#123;</span><br><span class="line"></span><br><span class="line">    var a = function()&#123;</span><br><span class="line">        console.log(&quot;a&quot;);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    b = function()&#123;</span><br><span class="line">        console.log(&quot;b&quot;);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    function c()&#123;</span><br><span class="line">        console.log(&quot;c&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;)();</span><br><span class="line"></span><br><span class="line">a();// error</span><br><span class="line">b();// ok</span><br><span class="line">c();// error</span><br></pre></td></tr></table></figure></p>
+<p>node和浏览器环境，在表现上稍有区别。浏览器环境下，在function外部声明的变量，是全局对象window的属性；而在node环境，不会直接成为global的属性，因为其实node每个文件都是被一个匿名的function包裹着</p>
+<h1 id="this指向哪个对象"><a href="#this指向哪个对象" class="headerlink" title="this指向哪个对象"></a>this指向哪个对象</h1><p>javascript和java里的this，完全不同。java中的this含义非常明确，即当前实例。而javascript中的this要复杂得多。比如以下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function doSomething()&#123;</span><br><span class="line">    console.log(this.name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果只看这段代码，无法确定在运行时this指向哪个对象。要确定javascript中的this指向哪个对象，必须依赖上下文。总共有5种情况：</p>
+<h2 id="作为某对象的方法被调用"><a href="#作为某对象的方法被调用" class="headerlink" title="作为某对象的方法被调用"></a>作为某对象的方法被调用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123;</span><br><span class="line">    name: &quot;kyfxbl&quot;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.sayHi = function()&#123;</span><br><span class="line">    console.log(this.name);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.sayHi();</span><br></pre></td></tr></table></figure>
+<p>当function做为某对象的方法被调用时，this指向该对象</p>
+<h2 id="直接调用"><a href="#直接调用" class="headerlink" title="直接调用"></a>直接调用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">global.name = &quot;kyfxbl&quot;;</span><br><span class="line"></span><br><span class="line">function sayHi()&#123;</span><br><span class="line">    console.log(this.name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sayHi();</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">global.name = &quot;kyfxbl&quot;;</span><br><span class="line"></span><br><span class="line">function wrapper()&#123;</span><br><span class="line"></span><br><span class="line">    (function()&#123;</span><br><span class="line">        console.log(this.name);</span><br><span class="line">    &#125;)();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">wrapper();</span><br></pre></td></tr></table></figure>
+<p>直接调用时，this指向全局对象，浏览器环境下是window，node环境是global</p>
+<h2 id="作为构造函数被调用"><a href="#作为构造函数被调用" class="headerlink" title="作为构造函数被调用"></a>作为构造函数被调用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function Person(name)&#123;</span><br><span class="line">    this.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var person = new Person(&quot;kyfxbl&quot;);</span><br><span class="line"></span><br><span class="line">console.log(person.name);</span><br></pre></td></tr></table></figure>
+<p>当function被作为构造函数调用时，this指向新创建的那个对象。在OO编程里，这是一种常见的形式</p>
+<h2 id="通过call和apply调用"><a href="#通过call和apply调用" class="headerlink" title="通过call和apply调用"></a>通过call和apply调用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">function sayHi()&#123;</span><br><span class="line">    console.log(this.name);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var obj = &#123;</span><br><span class="line">    name: &quot;kyfxbl&quot;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">sayHi.call(obj);</span><br></pre></td></tr></table></figure>
+<p>这种情况下，this就是call的第一个参数</p>
+<h2 id="在顶层代码中的行为"><a href="#在顶层代码中的行为" class="headerlink" title="在顶层代码中的行为"></a>在顶层代码中的行为</h2><p>在顶层环境，即不在任何function内部的this，在浏览器环境和node环境不同</p>
+<p>在node环境，以下代码的输出结果可能有点出人意料：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">console.log(this === exports);// true</span><br><span class="line">console.log(this === global);// false</span><br><span class="line"></span><br><span class="line">(function()&#123;</span><br><span class="line">    console.log(this === exports);// false</span><br><span class="line">    console.log(this === global);// true</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure></p>
+<p>在顶层环境，this指向module.exports，而非global</p>
+<p>而在浏览器环境，顶层的this指向window<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alert(this === window);// true</span><br></pre></td></tr></table></figure></p>
+<p>这是浏览器环境和node环境的差异</p>
+<h1 id="function的高级属性"><a href="#function的高级属性" class="headerlink" title="function的高级属性"></a>function的高级属性</h1><p>function有些高级属性，平时可能用得比较少，但是在写框架和库的时候，有时必须要用到</p>
+<h2 id="apply和call函数"><a href="#apply和call函数" class="headerlink" title="apply和call函数"></a>apply和call函数</h2><p>通过apply和call，可以实现函数动态调用</p>
+<p>这2个函数很接近，唯一的区别是，apply是传参数数组，而call是传变参</p>
+<h2 id="arguments和this"><a href="#arguments和this" class="headerlink" title="arguments和this"></a>arguments和this</h2><p>函数被调用时，会自动创建arguments对象，它的行为类似数组，但又不是数组。通过arguments可以动态判断参数的情况</p>
+<p>另一个关键字是this，前面介绍过了。</p>
+<p>因为每一个function内部都有这2个关键字，所以如果存在函数嵌套的情况，内部函数的this和arguments就会覆盖外层函数的this和arguments。因此如果需要在内层函数里访问外层函数的这2个属性，通常的做法是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">function wrapper(age)&#123;</span><br><span class="line"></span><br><span class="line">    var that = this;</span><br><span class="line"></span><br><span class="line">    var thatArguments = arguments;</span><br><span class="line"></span><br><span class="line">    function inner()&#123;</span><br><span class="line">        console.log(that.name);</span><br><span class="line">        console.log(thatArguments);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    inner();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">var obj = &#123;</span><br><span class="line">    name: &quot;kyfxbl&quot;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">wrapper.call(obj, 23);// kyfxbl, &#123;&apos;0&apos;: 23&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="length属性"><a href="#length属性" class="headerlink" title="length属性"></a>length属性</h2><p>length表示该function形参的个数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function sayHi(name, words)&#123;</span><br><span class="line">    // logic</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">console.log(sayHi.length);// 2</span><br></pre></td></tr></table></figure></p>
+<h2 id="caller"><a href="#caller" class="headerlink" title="caller"></a>caller</h2><p>caller指向当前调用此函数的外层函数，如果本身就是最外层的函数，则返回null<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function wrapper()&#123;</span><br><span class="line"></span><br><span class="line">    function inner()&#123;</span><br><span class="line">        console.log(inner.caller.toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    inner();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">wrapper();</span><br></pre></td></tr></table></figure></p>
+<p>另外，如果在node环境下，最外层的function，其caller并不是null，而是某一个函数。这也说明了node里的每一个文件，其实都被一个function包裹着：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function test()&#123;</span><br><span class="line">    console.log(test.caller.toString());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test();</span><br></pre></td></tr></table></figure></p>
+<p>输出是：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">function (exports, require, module, __filename, __dirname) &#123; </span><br><span class="line"></span><br><span class="line">    function test()&#123;</span><br><span class="line">        console.log(test.caller.toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    test();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="callee"><a href="#callee" class="headerlink" title="callee"></a>callee</h2><p>callee是arguments上的一个属性，指向自己。当需要获取到function自身的引用时，会用到这个属性。比如实现匿名函数的递归调用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function test()&#123;</span><br><span class="line">    console.log(arguments.callee === test);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test();// true</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/19/Hexo插件机制分析/" rel="next" title="Hexo插件机制分析">
+                <i class="fa fa-chevron-left"></i> Hexo插件机制分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/08/21/用rsync同步文件夹/" rel="prev" title="用rsync同步文件夹">
+                用rsync同步文件夹 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#scope-chain"><span class="nav-number">1.</span> <span class="nav-text">scope chain</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#函数在scope-chain上查找变量"><span class="nav-number">1.1.</span> <span class="nav-text">函数在scope chain上查找变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scope-chain在函数定义时确定"><span class="nav-number">1.2.</span> <span class="nav-text">scope chain在函数定义时确定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#scope-chain上的调用对象可修改"><span class="nav-number">1.3.</span> <span class="nav-text">scope chain上的调用对象可修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#闭包（closure）如何形成"><span class="nav-number">1.4.</span> <span class="nav-text">闭包（closure）如何形成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#所有变量都是某个对象的属性"><span class="nav-number">1.5.</span> <span class="nav-text">所有变量都是某个对象的属性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#this指向哪个对象"><span class="nav-number">2.</span> <span class="nav-text">this指向哪个对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#作为某对象的方法被调用"><span class="nav-number">2.1.</span> <span class="nav-text">作为某对象的方法被调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#直接调用"><span class="nav-number">2.2.</span> <span class="nav-text">直接调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#作为构造函数被调用"><span class="nav-number">2.3.</span> <span class="nav-text">作为构造函数被调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过call和apply调用"><span class="nav-number">2.4.</span> <span class="nav-text">通过call和apply调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在顶层代码中的行为"><span class="nav-number">2.5.</span> <span class="nav-text">在顶层代码中的行为</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#function的高级属性"><span class="nav-number">3.</span> <span class="nav-text">function的高级属性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#apply和call函数"><span class="nav-number">3.1.</span> <span class="nav-text">apply和call函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#arguments和this"><span class="nav-number">3.2.</span> <span class="nav-text">arguments和this</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#length属性"><span class="nav-number">3.3.</span> <span class="nav-text">length属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#caller"><span class="nav-number">3.4.</span> <span class="nav-text">caller</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#callee"><span class="nav-number">3.5.</span> <span class="nav-text">callee</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

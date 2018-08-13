@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文系全文转载，作者juven xu，讨论对java异常处理的思考。最后一段是我的补充">
+<meta property="og:type" content="article">
+<meta property="og:title" content="异常处理最佳实践">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/异常处理最佳实践/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="本文系全文转载，作者juven xu，讨论对java异常处理的思考。最后一段是我的补充">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="异常处理最佳实践">
+<meta name="twitter:description" content="本文系全文转载，作者juven xu，讨论对java异常处理的思考。最后一段是我的补充">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/异常处理最佳实践/"/>
+
+
+
+
+
+  <title>异常处理最佳实践 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/异常处理最佳实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">异常处理最佳实践</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:33:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文系全文转载，作者juven xu，讨论对java异常处理的思考。最后一段是我的补充<br><a id="more"></a></p>
+<h1 id="原文链接"><a href="#原文链接" class="headerlink" title="原文链接"></a>原文链接</h1><p><a href="http://www.juvenxu.com/2011/03/30/exception-handling-best-practices/" target="_blank" rel="noopener">异常处理最佳实践</a></p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>作为一个已经写了近5年Java代码的程序员，我直到最近才算是基本明白了异常应该怎么用，这真是令人汗颜。</p>
+<p>事情是这样的，上周，和往常一样，我在开发一个很平常的应用，并且不得不面对各种各样的异常，比如常见的IOException，或者用到个第三方类库可能会给你返回ThirdPartyException，还有，我自己也会定义异常，姑且叫它MyOwnException。</p>
+<p>我是使用分层的架构写代码的，比如有个REST层，有个领域模型层，有持久化层，这本没什么问题，可当我发现一个接口要throws三四个或者更多的异常的时候，就觉得蛋疼了，这不仅看起来恶心，如调用者如何处理它们似乎也是个问题。这不是第一次，其实之前蛋疼过很多次了，我一直阅读各种OO设计相关书籍，以理解如何组织各种类和对象，可我还真没仔细考虑过如何组织异常。 </p>
+<p>好吧，为了以后不再蛋疼，我得弄清楚这个异常的用法。我希望能够明白如何组织异常才能使其变得整洁，而不是肆无忌惮地污染我精心设计的接口。 </p>
+<p>我翻阅了相关书籍，仔细查看了它们关于异常的描述，包括 </p>
+<p>Implementation Patterns — Kent Beck </p>
+<p>Clean Code: A Handbook of Agile Software Craftsmanship — Robert C. Martin </p>
+<p>Effective Java (2nd) — Joshua Bloch </p>
+<p>Robust Java: Exception Handling, Testing, and Debugging — Stephen Stelting </p>
+<p>边阅读边思考，最终基本理解了异常处理的最佳实践。值得一提的是，这几本书中 Joshua Bloch 的描述相比最为全面和深刻，Kent Beck 的最简单粗糙，Robert C. Martin 一书的那一章其实是 Michael Feathers 写的，也只能算是一般，Stephen Stelting 的描述看起来很全面，可太理论了，实例太少，没有说服力。 </p>
+<p>那异常处理的最佳实践到底是什么？首先要理解的是，异常到底是什么，我觉得异常分两类。 第一是业务异常，就是处理业务的时候80%的时候是没问题的，但可能有20%的时候事情没有按理想的方向发展。例如注册用户的时候，正常情况是注册成功，但可能用户提交请求的时候，系统发现用户名已经被别人注册了，这是就可以抛出一个UserAlreadyExistsException。 第二是系统异常，系统异常与具体业务流程没有直接的关系，例如编程错误导致的NullPointExcpetion，还有环境问题，例如磁盘损坏或者网络连接不稳定造成了IOException。 </p>
+<p>先谈谈业务异常，业务异常应该是接口的一部分，该接口的用户应该能够处理该异常。也就是说，在实现接口之前，就应该定义清楚这个接口会抛出怎样的异常，例如注册用户这个接口就应该明确定义会抛出UserAlreadyExistsException，并辅以必要文档，那调用者就知道怎么去处理。如果你在接口声明异常，那你一定要确保接口的调用者能够处理之。例如对应于 UserAlreadyExistsException，用户界面可以提示用户该ID已存在，那用户可以使用另外的ID来注册。注意，处理异常不是简单的catch，然后随便打印点日志那么简单，业务异常的处理应当遵照业务流程。 </p>
+<p>而系统异常由于没有实际业务意义，调用者往往是不知道如何处理的。例如注册用户的时候收到一个IOException，你只会一头雾水。那系统异常应该如何处理呢？有这么几个选择： 能在底层处理的就本地处理掉，例如网络连接超时异常，可以编写代码尝试再次连接。 能翻译为业务异常的就翻译，有时候你可能发现某个IOException对应有实际的业务意义，但不要直接抛出，而是应该Exception Chaining技术来翻译，例如 throw new MyOwnException(“sorry, …”, ioe)，这样既不至于丢失原始信息，业务接口也更容易理解。 实在无法处理的，就转换为RuntimeException，反正调用者也不知道怎么处理，那在接口中声明是没有意义的，只会造成调用者困惑并带来负担。这里同样应该使用Exception Chaining以避免信息丢失。我的实际经验告诉我，很多人完全都不考虑使用RuntimeException，这真是莫大的浪费。 </p>
+<p>有时候业务异常和系统异常的角色会相互转换，例如 FileNotFoundException 对于文件处理这个领域来说是业务异常，可对于我的应用来说，可能只是一个系统异常。 </p>
+<p>上述是我认为异常处理最核心最有用的实践，除此之外还有不少前人总结的经验，包括： </p>
+<p>记录异常，但只记录一次。（不要丢失历史） </p>
+<p>不要返回及传Null值。（避免NullPointException和不必要的检查） </p>
+<p>尽量重用JDK自带的异常。（以降低学习成本） </p>
+<p>在自定义异常中存储异常相关信息字段。（以方便日后处理） </p>
+<p>永远不要直接忽略异常。（不要丢失历史） </p>
+<p>为异常声明写Javadoc。（对你的用户有好些） </p>
+<p>不要 throws 或者 catch 顶层的 Exception 类。（天知道Exception对应什么业务信息） </p>
+<p>其实当我读毕前面提到的几本书，然后再Google相关文档的时候，就发现已经有人基本总结过这些内容了：</p>
+<p>Best Practices for Exception Handling, by Gunjan Doshi， 文章是2003年写的，但一点也不过时。相比之下我这篇文章有污染搜索引擎之嫌，不管怎样，这算是自我的一个总结，对英文不好的人应该也有些价值。 </p>
+<h1 id="本人总结"><a href="#本人总结" class="headerlink" title="本人总结"></a>本人总结</h1><p>1、作者认为异常分为“业务异常”和“系统异常”，正好java也有CheckedException和UncheckedException之分，我感觉可以对应起来。 对于“业务异常”，上层类应该知道是如何处理的，所以将“业务异常”声明为CheckedException，作为接口的一部分，强制要求上层捕获处理，这是合理的 </p>
+<p>对于“系统异常”，上层类就算catch住了，也是无能为力，所以将其声明为CheckedException，意义是很小的，往往也只能继续向上抛出，或者记录日志就消化掉。反而会有不必要的try catch，影响代码的可读性。所以对于这类异常，可以声明为UncheckedException，不强制上层捕获处理 </p>
+<p>2、对于业务层无法处理的异常，不可避免地会抛到展现层。那么这个时候，至少要做两件事情，一个是记录日志，另一个是页面跳转，不让用户直接看到500。如果展现层用的是struts2框架的话，可以通过global-exception-handler来实现 </p>
+<p>3、如果用spring管理事务，那么业务层是不能把DAO层的异常消化掉的，否则的话spring管理的事务就无法生效了，在一个系统中考虑异常处理机制的时候，务必考虑这一点 </p>
+<p>4、对于MyOwnException，作者建议采用Exception Chaining来实现</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/管理版本分支/" rel="next" title="管理版本分支">
+                <i class="fa fa-chevron-left"></i> 管理版本分支
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/struts2典型场景的配置/" rel="prev" title="struts2典型场景的配置">
+                struts2典型场景的配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#原文链接"><span class="nav-number">1.</span> <span class="nav-text">原文链接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本人总结"><span class="nav-number">3.</span> <span class="nav-text">本人总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

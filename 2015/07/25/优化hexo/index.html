@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近开始玩hexo，它并非一个博客系统，而是一个静态博客生成工具。我参考了网上的一些文章，也做了一些优化。本文总结一下搭博客以来的一些经验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优化hexo">
+<meta property="og:url" content="http://yoursite.com/2015/07/25/优化hexo/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="最近开始玩hexo，它并非一个博客系统，而是一个静态博客生成工具。我参考了网上的一些文章，也做了一些优化。本文总结一下搭博客以来的一些经验。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="优化hexo">
+<meta name="twitter:description" content="最近开始玩hexo，它并非一个博客系统，而是一个静态博客生成工具。我参考了网上的一些文章，也做了一些优化。本文总结一下搭博客以来的一些经验。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/07/25/优化hexo/"/>
+
+
+
+
+
+  <title>优化hexo | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/07/25/优化hexo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">优化hexo</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-07-25T16:16:51+09:00">
+                2015-07-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/其它/" itemprop="url" rel="index">
+                    <span itemprop="name">其它</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近开始玩hexo，它并非一个博客系统，而是一个静态博客生成工具。我参考了网上的一些文章，也做了一些优化。本文总结一下搭博客以来的一些经验。<br><a id="more"></a></p>
+<h1 id="hexo的介绍文章和教程"><a href="#hexo的介绍文章和教程" class="headerlink" title="hexo的介绍文章和教程"></a>hexo的介绍文章和教程</h1><p>基础概念介绍和购买域名这些，本文就不涉及了，网上很多文章已经介绍了。推荐以下几篇：<br><a href="http://wuchong.me/jacman/2014/11/20/how-to-use-jacman/" target="_blank" rel="noopener">如何使用Jacman主题</a><br><a href="http://zipperary.com/2013/05/28/hexo-guide-1/" target="_blank" rel="noopener">hexo系列教程</a><br><a href="http://ibruce.info/2013/11/22/hexo-your-blog/" target="_blank" rel="noopener">hexo你的博客</a></p>
+<h1 id="添加好用的非默认插件"><a href="#添加好用的非默认插件" class="headerlink" title="添加好用的非默认插件"></a>添加好用的非默认插件</h1><p>hexo环境搭建非常简单，只需要有node就可以<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo -g</span><br></pre></td></tr></table></figure></p>
+<p>然后执行hexo初始化，就会得到一个可工作的博客目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init dir_name</span><br><span class="line">$ cd dir_name</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure></p>
+<p>但是这样仅安装了默认的插件，我推荐也安装以下4个插件，可以压缩js，css，并生成sitemap和rss<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-clean-css --save</span><br><span class="line">$ npm install hexo-uglify --save</span><br><span class="line">$ npm install hexo-generator-feed --save</span><br><span class="line">$ npm install hexo-generator-sitemap --save</span><br></pre></td></tr></table></figure></p>
+<h1 id="导入csdn博客"><a href="#导入csdn博客" class="headerlink" title="导入csdn博客"></a>导入csdn博客</h1><p>我之前已经在csdn写了好几年博客，所以想把上面的文章迁移到新网站，没有找到现成的插件，就自己写了一个。如果你也有这个需求，可以试一下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-migrator-csdn --save</span><br></pre></td></tr></table></figure></p>
+<p>安装之后，执行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo migrate csdn username</span><br></pre></td></tr></table></figure></p>
+<p>如果要指定迁移某一篇博客<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo migrate csdn user_name topic_id</span><br></pre></td></tr></table></figure></p>
+<h1 id="选择一个主题"><a href="#选择一个主题" class="headerlink" title="选择一个主题"></a>选择一个主题</h1><p>hexo一个有趣的地方在于，和MVC一样，它的内容和样式是完全分离的。/source/_post/*.md是数据，而网站样式是由theme决定的。因此只需要更换主题，就可以使整个网站改头换面。或者当你修改主题的时候，也不需要对博客内容做任何调整</p>
+<p>主题有很多，我个人使用的是jacman，稍微修改了一点（主要是更新了百度统计和百度搜索）。安装主题也只需要一行命令，以本站使用的jacman为例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/wuchong/jacman.git themes/jacman</span><br></pre></td></tr></table></figure></p>
+<p>或者，如果你想使用我的分支：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/kyfxbl/jacman.git themes/jacman</span><br></pre></td></tr></table></figure></p>
+<p>然后在全局的_config.yml中设置主题为jacman即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: jacman</span><br></pre></td></tr></table></figure></p>
+<p>装好主题以后，会在目录中找到主题自己的_config.yml，里面配置的是主题相关的参数。基本上所有参数都有注释，都试试就行了</p>
+<h1 id="默认增加目录和标签"><a href="#默认增加目录和标签" class="headerlink" title="默认增加目录和标签"></a>默认增加目录和标签</h1><p>默认的脚手架在scaffolds/post.md，一开始只预设了title和date，建议把categories和tags加上，就不需要每次都重新填了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">title: &#123;&#123; title &#125;&#125;</span><br><span class="line">date: &#123;&#123; date &#125;&#125;</span><br><span class="line">categories: </span><br><span class="line">tags:</span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
+<p>每次hexo n之后，填上你需要的目录和标签就可以，填写标签需要用数组的方式，例如本文：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">title: 优化hexo</span><br><span class="line">date: 2015-07-25 16:16:51</span><br><span class="line">categories: 其它</span><br><span class="line">tags: [hexo, Jacman]</span><br><span class="line">---</span><br></pre></td></tr></table></figure></p>
+<h1 id="给文章添加摘要"><a href="#给文章添加摘要" class="headerlink" title="给文章添加摘要"></a>给文章添加摘要</h1><p>把摘要和正文用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--more--&gt;</span><br></pre></td></tr></table></figure></p>
+<p>分隔开即可，主题会自动处理这个标记，生成“阅读全文”按钮</p>
+<h1 id="添加站内搜索"><a href="#添加站内搜索" class="headerlink" title="添加站内搜索"></a>添加站内搜索</h1><p>站内搜索比较麻烦一点。默认情况下，主题里的几个search配置项都是关闭的，这里我选择百度站内搜索，就需要做如下配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">baidu_search:</span><br><span class="line">  enable: true</span><br><span class="line">  id: &quot;xxxxxxxxx&quot; // 你的百度站内搜索id</span><br><span class="line">  site: &quot;xxxxxxx&quot; // 你的二级域名，比如so.kyfxbl.com/cse/search</span><br></pre></td></tr></table></figure></p>
+<h2 id="配置id和域名"><a href="#配置id和域名" class="headerlink" title="配置id和域名"></a>配置id和域名</h2><p>首先需要到百度站内统计的后台，申请一个id填到这里，注意需要<strong><em>加上引号</em></strong>，因为百度的id是纯数字，hexo解析的时候会溢出。然后site建议填你自己的二级域名，然后从dns里转发到百度的CNAME</p>
+<p>这里配置的参数，最终是用来生成右上角的搜索框，在header.ejs里：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;% &#125; else if(theme.baidu_search.enable)&#123; %&gt;</span><br><span class="line">    &lt;form class=&quot;search&quot; action=&quot;&lt;%- theme.baidu_search.site %&gt;&quot; target=&quot;_blank&quot;&gt;</span><br><span class="line">	    &lt;label&gt;Search&lt;/label&gt;</span><br><span class="line">	    &lt;input name=&quot;s&quot; type=&quot;hidden&quot; value= &lt;%= theme.baidu_search.id %&gt; &gt;</span><br><span class="line">	    &lt;input type=&quot;text&quot; id=&quot;bdcsMain&quot; name=&quot;q&quot; size=&quot;30&quot; placeholder=&quot;&lt;%= __(&apos;search&apos;) %&gt;&quot;&gt;</span><br><span class="line">		&lt;br&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;% &#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后其实是跳转到百度站内搜索的结果url：<a href="http://zhannei.baidu.com/cse/search?s=xxx&amp;q=xxx" target="_blank" rel="noopener">http://zhannei.baidu.com/cse/search?s=xxx&amp;q=xxx</a></p>
+<h2 id="添加代码"><a href="#添加代码" class="headerlink" title="添加代码"></a>添加代码</h2><p>实际上我不清楚为什么要添加这段代码，核心是上面的那段url。不过还是按照百度官网的提示加了以下代码</p>
+<p>首先给输入关键字的input增加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=&quot;bdcsMain&quot;</span><br></pre></td></tr></table></figure></p>
+<p>然后在after_footer.ejs的末尾增加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- baidu search begin --&gt;</span><br><span class="line">&lt;%- partial(&apos;baidu-search&apos;) %&gt;</span><br><span class="line">&lt;!-- baidu search end--&gt;</span><br></pre></td></tr></table></figure></p>
+<p>最后增加baidu-search.ejs<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;% if (theme.baidu_search.enable)&#123; %&gt;</span><br><span class="line"></span><br><span class="line">&lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">    (function()&#123;</span><br><span class="line">        document.write(unescape(&apos;%3Cdiv id=&quot;bdcs&quot;%3E%3C/div%3E&apos;));</span><br><span class="line">        var bdcs = document.createElement(&apos;script&apos;);</span><br><span class="line">        bdcs.type = &apos;text/javascript&apos;;</span><br><span class="line">        bdcs.async = true;</span><br><span class="line">        bdcs.src = &apos;http://znsv.baidu.com/customer_search/api/js?sid=&apos; + &apos;&lt;%= theme.baidu_search.id %&gt;&apos; + &apos;&amp;plate_url=&apos; + encodeURIComponent(window.location.href) + &apos;&amp;t=&apos; + Math.ceil(new Date()/3600000);</span><br><span class="line">        var s = document.getElementsByTagName(&apos;script&apos;)[0];</span><br><span class="line">        s.parentNode.insertBefore(bdcs, s);</span><br><span class="line">    &#125;)();</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;% &#125; %&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这部分代码jacman的主干里没有，我的分支已经加上了</p>
+<h2 id="在百度后台配置"><a href="#在百度后台配置" class="headerlink" title="在百度后台配置"></a>在百度后台配置</h2><p>现在已经可以通过搜索框跳转到百度站内统计的结果页面，但是还需要对此页面进行配置，才能比较美观。另外站内的页面，也需要提交给百度收录，才能得到搜索结果。这些都需要在百度后台操作，跟hexo没有关系<br><a href="http://zn.baidu.com/" target="_blank" rel="noopener">百度站内统计</a><br><a href="http://zhanzhang.baidu.com/" target="_blank" rel="noopener">百度站长平台</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/22/接口升级兼容老版本的总结/" rel="next" title="接口升级兼容老版本的总结">
+                <i class="fa fa-chevron-left"></i> 接口升级兼容老版本的总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/07/26/MJRefresh原理分析/" rel="prev" title="MJRefresh原理分析">
+                MJRefresh原理分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#hexo的介绍文章和教程"><span class="nav-number">1.</span> <span class="nav-text">hexo的介绍文章和教程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加好用的非默认插件"><span class="nav-number">2.</span> <span class="nav-text">添加好用的非默认插件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#导入csdn博客"><span class="nav-number">3.</span> <span class="nav-text">导入csdn博客</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#选择一个主题"><span class="nav-number">4.</span> <span class="nav-text">选择一个主题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#默认增加目录和标签"><span class="nav-number">5.</span> <span class="nav-text">默认增加目录和标签</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#给文章添加摘要"><span class="nav-number">6.</span> <span class="nav-text">给文章添加摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#添加站内搜索"><span class="nav-number">7.</span> <span class="nav-text">添加站内搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#配置id和域名"><span class="nav-number">7.1.</span> <span class="nav-text">配置id和域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#添加代码"><span class="nav-number">7.2.</span> <span class="nav-text">添加代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在百度后台配置"><span class="nav-number">7.3.</span> <span class="nav-text">在百度后台配置</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

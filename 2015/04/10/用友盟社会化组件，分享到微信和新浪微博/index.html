@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近做的APP，需要分享功能，于是试了一下友盟的社会化组件。总的感觉还不错，虽然没有比直接集成官方SDK简便多少，但是后台统计的功能不错，所以最后还是用了。官网的文档说明已经挺详细了，不过章节组织得有点乱，本文总结一下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用友盟社会化组件，分享到微信和新浪微博">
+<meta property="og:url" content="http://yoursite.com/2015/04/10/用友盟社会化组件，分享到微信和新浪微博/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="最近做的APP，需要分享功能，于是试了一下友盟的社会化组件。总的感觉还不错，虽然没有比直接集成官方SDK简便多少，但是后台统计的功能不错，所以最后还是用了。官网的文档说明已经挺详细了，不过章节组织得有点乱，本文总结一下">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用友盟社会化组件，分享到微信和新浪微博">
+<meta name="twitter:description" content="最近做的APP，需要分享功能，于是试了一下友盟的社会化组件。总的感觉还不错，虽然没有比直接集成官方SDK简便多少，但是后台统计的功能不错，所以最后还是用了。官网的文档说明已经挺详细了，不过章节组织得有点乱，本文总结一下">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/04/10/用友盟社会化组件，分享到微信和新浪微博/"/>
+
+
+
+
+
+  <title>用友盟社会化组件，分享到微信和新浪微博 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/04/10/用友盟社会化组件，分享到微信和新浪微博/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">用友盟社会化组件，分享到微信和新浪微博</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-04-10T02:16:00+09:00">
+                2015-04-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近做的APP，需要分享功能，于是试了一下友盟的社会化组件。总的感觉还不错，虽然没有比直接集成官方SDK简便多少，但是后台统计的功能不错，所以最后还是用了。官网的文档说明已经挺详细了，不过章节组织得有点乱，本文总结一下<br><a id="more"></a></p>
+<h1 id="获取友盟app-key"><a href="#获取友盟app-key" class="headerlink" title="获取友盟app key"></a>获取友盟app key</h1><p>首先去友盟注册一个app key，然后下载它的SDK。这里要注意的是，SDK分为IDFA版和非IDFA版，前者需要设置一个默认的广告页，否则有可能被苹果拒绝上架，我觉得有点风险，所以最后选的是非IDFA的版本。由于目前IDFA是唯一标识设备的最准确手段，所以这个版本有可能在识别新用户时不如IDFA版准确，不过我觉得可以接受</p>
+<p>然后友盟提供了多套组件，除了最基础的应用统计，还有社会化组件，推送组件等，我只用了它的基础SDK和社会化SDK。app key是共通的</p>
+<h1 id="集成微信"><a href="#集成微信" class="headerlink" title="集成微信"></a>集成微信</h1><p>包括微信好友，朋友圈，收藏</p>
+<p>首先需要去微信开放平台注册应用，然后会得到app id和app secret。我之前做过微信公众号的二次开发，对微信的这套玩法已经比较熟悉了。针对移动应用，微信开放平台提供了登陆、分享、支付等接口，我们主要用的是分享接口，这是最基础的接口，目前不需要认证开发者身份，只需要在平台上注册就可以了</p>
+<p>得到app id和app secret之后，就可以接入了。用原生SDK和友盟SDK都差不多，iOS APP集成都离不开URL Types这一套，所以首先需要设置URL Types，填上app secret</p>
+<p>然后就改用友盟提供的API了，不用微信原生的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;UMSocial.h&quot;</span><br><span class="line">#import &quot;UMSocialWechatHandler.h&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[UMSocialData setAppKey:@&quot;友盟的AppKey&quot;];</span><br><span class="line">[UMSocialWechatHandler setWXAppId:@&quot;微信app id&quot; appSecret:@&quot;微信app secret&quot; url:nil];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url</span><br><span class="line">&#123;</span><br><span class="line">    return  [UMSocialSnsService handleOpenURL:url];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation</span><br><span class="line">&#123;</span><br><span class="line">    return  [UMSocialSnsService handleOpenURL:url];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上是需要写在AppDelegate里的代码，唯一需要注意的是，setWXAppId: appSecret: url这个方法里，url可以传nil。因为我们后续分享出去的URL都是每个页面特殊的，所以不在这里填。如果这里填了url，则会作为默认的跳转链接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-(void) socialButtonPressed</span><br><span class="line">&#123;</span><br><span class="line">    NSArray *targetSns = @[UMShareToWechatSession, UMShareToWechatTimeline, UMShareToWechatFavorite];</span><br><span class="line"></span><br><span class="line">    NSString *url = @&quot;http://xxx.com/分享的消息点击后进入的url&quot;;</span><br><span class="line">    NSString *title = @&quot;自定义title&quot;;</span><br><span class="line">    [UMSocialData defaultData].extConfig.wechatSessionData.url = url;</span><br><span class="line">    [UMSocialData defaultData].extConfig.wechatTimelineData.url = url;</span><br><span class="line">    [UMSocialData defaultData].extConfig.wechatFavoriteData.url = url;</span><br><span class="line">    [UMSocialData defaultData].extConfig.wechatSessionData.title = title;</span><br><span class="line">    [UMSocialData defaultData].extConfig.wechatFavoriteData.title = title;</span><br><span class="line"></span><br><span class="line">    [UMSocialSnsService presentSnsIconSheetView:self appKey:nil shareText:@&quot;内容文字&quot; shareImage:[UIImage imageNamed:@&quot;内容图片&quot;] shareToSnsNames:targetSns delegate:nil];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里是点击分享按钮后的代码，targetSns是分享的目标，还可以按需添加其他的社交平台，这里我只添加了微信。然后需要分别设置聊天、朋友圈、收藏的URL，朋友圈不需要设置标题，因为分享到朋友圈的消息没有标题。API里是有的，但是其实无效</p>
+<p>另外如果用户的设备上没有装微信，那么分享界面也就不会出现微信的图标，否则的话苹果会认为是诱导下载，而拒绝上架</p>
+<h1 id="集成新浪微博"><a href="#集成新浪微博" class="headerlink" title="集成新浪微博"></a>集成新浪微博</h1><p>感觉集成新浪微博更麻烦一点，因为集成微信基本通过代码就完成了，而新浪微博需要在3个地方配置，比较零散。可能是因为我没有用新浪微博的原生SDK做过接入，所以直接用友盟的SDK感觉不是很能把握</p>
+<p>首先当然也是要去新浪平台注册应用，拿到app key和app secret。然后配置URL Types，不过这里用的app key不是刚才我们自己去新浪申请的app key，而是友盟的app key</p>
+<p>然后需要在新浪的管理后台配置OAuth的回调地址，根据友盟的文档，把安全域名配置为sns.whalecloud.com，回调地址配置成<a href="http://sns.whalecloud.com/sina2/callback" target="_blank" rel="noopener">http://sns.whalecloud.com/sina2/callback</a></p>
+<p>这也是让我觉得比较奇怪的地方，按理说应该是配置成我们应用自己的地址才比较合理。在新浪的文档里找了半天，也没看到这个地址需要实现什么逻辑，就先按友盟介绍的来吧</p>
+<p>然后是代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;UMSocial.h&quot;</span><br><span class="line">#import &quot;UMSocialSinaHandler.h&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[UMSocialData setAppKey:@&quot;xxxx&quot;];</span><br><span class="line">[UMSocialSinaHandler openSSOWithRedirectURL:@&quot;http://sns.whalecloud.com/sina2/callback&quot;];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url</span><br><span class="line">&#123;</span><br><span class="line">    return  [UMSocialSnsService handleOpenURL:url];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation</span><br><span class="line">&#123;</span><br><span class="line">    return  [UMSocialSnsService handleOpenURL:url];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>模式和前面接入微信相当类似，也看出使用第三方组件的好处，至少handleOpenURL和openURL不需要写两遍了</p>
+<p>然后是分享的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSArray *targetSns = @[UMShareToSina];</span><br><span class="line"></span><br><span class="line">[UMSocialSnsService presentSnsIconSheetView:self appKey:nil shareText:@&quot;测试文字\nhttp://www.baidu.com&quot; shareImage:[UIImage imageNamed:@&quot;image_placeholder&quot;] shareToSnsNames:targetSns delegate:nil];</span><br></pre></td></tr></table></figure>
+<p>这里的区别是不需要设置url和title了，因为分享到微博的模式不同于微信，没有显示title和url的地方，这个是平台差异，不是使用友盟的原因，即使用新浪原生的SDK，也是一样做不到。所以我希望在分享的内容里添加一个链接，就需要直接写在shareText里</p>
+<p>经过上面的配置，就可以把内容分享到新浪微博了。这里如果用户设备上有微博，就会使用SSO直接分享；如果没有安装，则会跳转到web页面使用OAuth授权。这主要是因为新浪微博为第三方应用提供了OAuth授权的方式，而微信现在貌似只对公众号提供了OAuth接入，移动应用还是只能通过应用跳转</p>
+<p>但是现在有个问题，我发现我前面在新浪申请的app key和app secret从头到尾就没用过，这明显是不合理的。果然分享出去的微博，来源都是“友盟社会化组件”，后来找了一圈，发现还需要在友盟的后台配置一下自己的app key和app secret，然后就OK了</p>
+<h1 id="高级功能"><a href="#高级功能" class="headerlink" title="高级功能"></a>高级功能</h1><p>除了前面的最基本的分享，还可以自定义分享页面的样式（基础的方式是友盟已经提供了XIB和弹出方式），也可以调用更底层的直接分享接口（无页面），另外还有一些delegate方法，有需要的话可以自行实现</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/03/22/NSDictionary判断key存在，且value非空/" rel="next" title="NSDictionary判断key存在，且value非空">
+                <i class="fa fa-chevron-left"></i> NSDictionary判断key存在，且value非空
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/04/19/使用webview的场景/" rel="prev" title="使用webview的场景">
+                使用webview的场景 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#获取友盟app-key"><span class="nav-number">1.</span> <span class="nav-text">获取友盟app key</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集成微信"><span class="nav-number">2.</span> <span class="nav-text">集成微信</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#集成新浪微博"><span class="nav-number">3.</span> <span class="nav-text">集成新浪微博</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高级功能"><span class="nav-number">4.</span> <span class="nav-text">高级功能</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

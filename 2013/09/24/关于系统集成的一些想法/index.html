@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近在罗马尼亚做需求调研，发现用户在日常工作中，需要频繁从10个系统查看数据，辅助决策。于是就想是否有可能做一个信息聚合的系统，让用户不需要频繁地“切换”和“根据关键字检索”。今天晚饭时和同事讨论了一下，有一些零碎的想法，在此记录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于系统集成的一些想法">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/关于系统集成的一些想法/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="最近在罗马尼亚做需求调研，发现用户在日常工作中，需要频繁从10个系统查看数据，辅助决策。于是就想是否有可能做一个信息聚合的系统，让用户不需要频繁地“切换”和“根据关键字检索”。今天晚饭时和同事讨论了一下，有一些零碎的想法，在此记录">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于系统集成的一些想法">
+<meta name="twitter:description" content="最近在罗马尼亚做需求调研，发现用户在日常工作中，需要频繁从10个系统查看数据，辅助决策。于是就想是否有可能做一个信息聚合的系统，让用户不需要频繁地“切换”和“根据关键字检索”。今天晚饭时和同事讨论了一下，有一些零碎的想法，在此记录">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/关于系统集成的一些想法/"/>
+
+
+
+
+
+  <title>关于系统集成的一些想法 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/关于系统集成的一些想法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于系统集成的一些想法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:26:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/架构设计/" itemprop="url" rel="index">
+                    <span itemprop="name">架构设计</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在罗马尼亚做需求调研，发现用户在日常工作中，需要频繁从10个系统查看数据，辅助决策。于是就想是否有可能做一个信息聚合的系统，让用户不需要频繁地“切换”和“根据关键字检索”。今天晚饭时和同事讨论了一下，有一些零碎的想法，在此记录<br><a id="more"></a></p>
+<p>我认为这里有2个层面的问题，第一个层面是集成，第二个层面是信息搜索。分别对应用户的2个动作：“切换”、“检索” </p>
+<h1 id="集成"><a href="#集成" class="headerlink" title="集成"></a>集成</h1><p>问题的本质在于，这个新系统（下文简称A），需要和现有的10个系统集成起来（老系统是处于“被集成”的位置）。归纳起来，我认为一个系统是否容易“被集成”，可以分为3个层次： </p>
+<h2 id="通过URL集成"><a href="#通过URL集成" class="headerlink" title="通过URL集成"></a>通过URL集成</h2><p>第一种情况是，系统对外提供的是完整的界面，即“展现层的接口”。比如输入一个<a href="http://www.somesystem.com/sla/aug，某系统返回一个完整的页面。那么如果A要集成这个系统，就直接将这个页面嵌入到自己的界面中；或者发送一个指令如“kpi=sla/aug”，某系统返回一个完整的flash。那么A也可以直接把这个flash嵌入自己的界面" target="_blank" rel="noopener">www.somesystem.com/sla/aug，某系统返回一个完整的页面。那么如果A要集成这个系统，就直接将这个页面嵌入到自己的界面中；或者发送一个指令如“kpi=sla/aug”，某系统返回一个完整的flash。那么A也可以直接把这个flash嵌入自己的界面</a> </p>
+<p>这种情况在老的B/S应用中是比较常见的，在C/S应用中非常少见。难点在于一般都有鉴权机制，所以需要解决SSO的问题。</p>
+<h2 id="业务层接口调用"><a href="#业务层接口调用" class="headerlink" title="业务层接口调用"></a>业务层接口调用</h2><p>第二种情况是，系统对外提供只是数据片段，即“业务层的查询接口”。基本上所有的C/S架构应用都是这样的，比如在dota中潇洒地补刀，补刀了一个投石车，得到了70金币。server传给war3 client的只是类似“hit=yes;gold=+70;unit=destroy”的数据片段，而不是把整个补刀的动画传过来，动画是根据这些数据，在客户端上计算得到的 </p>
+<p>问题在于，对于大部分的C/S应用，这个接口并不开放。也就是说我想要得到上面的“hit=yes;gold=+70;unit=destroy”数据，唯一的办法就是打开客户端，然后认认真真地补中一辆投石车（好吧，这也不是很难），很难通过写代码的方式来模拟这个事情。 </p>
+<p>我们以前做过的一个系统，就是这种形式，通过<a href="http://www.company.com/workorder/username这个链接，返回某用户的工单数据。浏览器拿到数据以后，刷新DOM元素；而android终端拿到数据以后，刷新手机界面。这个接口，就是典型的业务层接口，无分B/S还是C/S" target="_blank" rel="noopener">www.company.com/workorder/username这个链接，返回某用户的工单数据。浏览器拿到数据以后，刷新DOM元素；而android终端拿到数据以后，刷新手机界面。这个接口，就是典型的业务层接口，无分B/S还是C/S</a></p>
+<h2 id="数据层接口"><a href="#数据层接口" class="headerlink" title="数据层接口"></a>数据层接口</h2><p>第三种情况是，系统将数据直接通过接口暴露出来，要什么就自己取。这个比较难举出例子，毕竟很少见。欧洲有些厂商的IT整体架构就是这样，底层是一个数据仓库，然后暴露了一堆查询接口。上层的应用系统是按需定制开发的，可能一个系统取了123数据来展示；另一个系统取了456数据来展示 </p>
+<p>这里的数据仓库，可以有多种形式，可能就是一个标准的RDBMS，开放了一个SQL接口（危险）；也有可能是加了一层很薄的接口，看起来类似第二种情况，但是可以更有效地做日志、权限控制、防SQL注入等。主要的问题是能否取得访问数据源的权限</p>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><p>第一种方式最为省事，因为封装得最彻底最粗粒度。A要集成这种系统很简单，但是要做定制则非常难。比如对方系统提供了一个页面，如果我们只想直接复用，那就最好。但是如果我们只想要页面里3个字段的2个，那么就需要修改这个页面，比如加参数</p>
+<p>第二种方式只提供数据，封装程度比较弱，细粒度，就给A的定制提供了更多的可能。但是相对的，A在界面开发上就需要更多的工作量 </p>
+<p>第三种方式则更彻底，没有任何封装，相对的就连业务规则也没有了。A想要什么就取什么，相对地工作量也就最大，某种程度上算是新开发一个系统，也谈不上什么集成了 </p>
+<p>从我来看，第一种方式封装过度，客户端的自由度太小；而第三种方式的粒度又太细，定制工作量太大，也缺乏约束。这两种方式都太极端，所以折中的第二种相对是比较好的，对一个开放系统来说，现在主要也是采取这种方式，比如各种开放平台的SDK，其实就是这种方式 </p>
+<h1 id="搜索"><a href="#搜索" class="headerlink" title="搜索"></a>搜索</h1><p>相对于前面讨论的集成层面来说，搜索层面没有太多可说的，本质上取决于对方系统接口的粒度和开放程度 </p>
+<p>比如说，假设我现在想做一个书籍信息的垂直聚合应用，那么我当然要去当当、亚马逊、京东、china-pub上拿信息 </p>
+<p>某网站开放了接口（无论是上述哪一层的接口都无所谓），就比如说是web api吧，有queryByIsbn()、queryByAuthor()、queryByPrice()这3个方法，那么我就可以根据条件，去调用这些接口，来精确搜索到我想要的信息 </p>
+<p>而另一个网站则非常封闭，就希望读者到我网站来贡献流量，不要第三方应用乱戴帽子，那么就只有一个URL，<a href="http://www.bookshop.com/book?id=123456，那么我要在这个网站上做精确搜索“10块钱的JAVA书”就非常难，只能先向www.bookshop/book?name=java发请求，从拿到的结果中再解析（需要用到文本解析、正则表达式、去重等），得到我想要的数据之后，再嵌入我的系统里" target="_blank" rel="noopener">www.bookshop.com/book?id=123456，那么我要在这个网站上做精确搜索“10块钱的JAVA书”就非常难，只能先向www.bookshop/book?name=java发请求，从拿到的结果中再解析（需要用到文本解析、正则表达式、去重等），得到我想要的数据之后，再嵌入我的系统里</a> </p>
+<p>从上面的例子可以看到，能不能很容易地得到搜索结果，最关键的因素是，目标系统是否是开放的，在设计的时候是否把“被集成”纳入考虑。遗憾的是，出于商业角度和历史原因，大部分都没有 </p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>简单总结一下B/S和C/S，其实我觉得界限是非常模糊的。B/S中的B，其实也是一种客户端 </p>
+<p>B/S的优势主要是统一，应用层协议都走http，展现全都是html + css + javascript，就非常通用。而且所有终端上都有浏览器，解决了分发的问题。但是B/S曾经也有很多缺陷，比如页面渲染能力，javascript执行效率，兼容性，server push缺乏标准等。所以才会有C/S的一席之地 </p>
+<p>而最近几年，这些问题都在逐一解决，HTML5、CSS3、V8 Engine、ajax、W3标准、web socket等，都在解决这些曾经的问题，所以B/S也就越来越流行了。或许不能说C/S正在消亡，而是B/S越来越像C/S了</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/tomcat源码阅读（三）——ClassLoader背景知识/" rel="next" title="tomcat源码阅读（三）——ClassLoader背景知识">
+                <i class="fa fa-chevron-left"></i> tomcat源码阅读（三）——ClassLoader背景知识
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/MongoDB初体验/" rel="prev" title="MongoDB初体验">
+                MongoDB初体验 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#集成"><span class="nav-number">1.</span> <span class="nav-text">集成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#通过URL集成"><span class="nav-number">1.1.</span> <span class="nav-text">通过URL集成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#业务层接口调用"><span class="nav-number">1.2.</span> <span class="nav-text">业务层接口调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据层接口"><span class="nav-number">1.3.</span> <span class="nav-text">数据层接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对比"><span class="nav-number">1.4.</span> <span class="nav-text">对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#搜索"><span class="nav-number">2.</span> <span class="nav-text">搜索</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="HTTP规范中有单独的一块，叫做“认证”。目的是对服务器的资源进行保护，只允许合法用户访问。一般我们自己开发的系统，也都会有认证机制，用户输入用户名和密码之后，才允许访问系统。但是这种认证是应用层面的认证，和HTTP的认证不是一回事，本文说的是HTTP协议层面的认证，不是WEB应用层面的认证">
+<meta property="og:type" content="article">
+<meta property="og:title" content="松鼠书读书笔记（六）——认证">
+<meta property="og:url" content="http://yoursite.com/2013/09/24/松鼠书读书笔记（六）——认证/index.html">
+<meta property="og:site_name" content="xqhu&#39;s blog">
+<meta property="og:description" content="HTTP规范中有单独的一块，叫做“认证”。目的是对服务器的资源进行保护，只允许合法用户访问。一般我们自己开发的系统，也都会有认证机制，用户输入用户名和密码之后，才允许访问系统。但是这种认证是应用层面的认证，和HTTP的认证不是一回事，本文说的是HTTP协议层面的认证，不是WEB应用层面的认证">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0079/5372/fa4e26e8-9564-3619-91d0-c86e786abad2.jpg">
+<meta property="og:image" content="http://dl.iteye.com/upload/attachment/0079/5378/7edc687f-884f-3166-a0a6-19bf48709f53.jpg">
+<meta property="og:updated_time" content="2018-06-17T13:23:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="松鼠书读书笔记（六）——认证">
+<meta name="twitter:description" content="HTTP规范中有单独的一块，叫做“认证”。目的是对服务器的资源进行保护，只允许合法用户访问。一般我们自己开发的系统，也都会有认证机制，用户输入用户名和密码之后，才允许访问系统。但是这种认证是应用层面的认证，和HTTP的认证不是一回事，本文说的是HTTP协议层面的认证，不是WEB应用层面的认证">
+<meta name="twitter:image" content="http://dl.iteye.com/upload/attachment/0079/5372/fa4e26e8-9564-3619-91d0-c86e786abad2.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2013/09/24/松鼠书读书笔记（六）——认证/"/>
+
+
+
+
+
+  <title>松鼠书读书笔记（六）——认证 | xqhu's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">xqhu's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/松鼠书读书笔记（六）——认证/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">松鼠书读书笔记（六）——认证</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T10:52:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/web/" itemprop="url" rel="index">
+                    <span itemprop="name">web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>HTTP规范中有单独的一块，叫做“认证”。目的是对服务器的资源进行保护，只允许合法用户访问。一般我们自己开发的系统，也都会有认证机制，用户输入用户名和密码之后，才允许访问系统。但是这种认证是应用层面的认证，和HTTP的认证不是一回事，本文说的是HTTP协议层面的认证，不是WEB应用层面的认证<br><a id="more"></a></p>
+<p>比如说，访问淘宝，需要输入用户名和密码，这是应用层面的认证；请求某个服务器通过http提供一份文档，server返回401，要求客户端提供用户名和密码，这是HTTP协议层面的认证 </p>
+<p>认证分为2种，一种是“基本认证”，另一种是“摘要认证” </p>
+<h1 id="基本认证"><a href="#基本认证" class="headerlink" title="基本认证"></a>基本认证</h1><p>基本认证是非常简单的，举一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /family/jeff.jpg HTTP/1.0</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.0 401 Authorization Required</span><br><span class="line">WWW-Authenticate:Basic realm=&quot;Family&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /family/jeff.jpg HTTP/1.0</span><br><span class="line">Authorization:Basic fjsfieqe4jkvkldfe</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.0 200 OK</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<p>流程非常简单，client按照“用户名:密码”的格式得到字符串，然后对此字符串进行BASE64编码，然后发到server </p>
+<p>基本认证的安全性很低，只能说是聊胜于无，有以下几个主要问题： </p>
+<p>1、在client和server中传输了密码，所以很容易被截获，比如经过proxy，这个proxy很容易就可以得到密码；或者用户不小心在浏览器上装了恶意插件，密码也就泄露了 </p>
+<p>2、密码等于是明文传输的，BASE64只是一种编码，不是加密，很容易就可以逆向算出密码 </p>
+<p>3、得到Authorization首部后，可以很容易地重放 </p>
+<h1 id="摘要认证"><a href="#摘要认证" class="headerlink" title="摘要认证"></a>摘要认证</h1><p>摘要认证比基本认证在安全性上要强一些，不过也有缺陷，也举个例子进行说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /family/jeff.jpg HTTP/1.0</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.0 401 Unauthorized</span><br><span class="line">WWW-Authenticate:Digest realm=&quot;Family&quot; nonce=&quot;nonce123&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET /family/jeff.jpg HTTP/1.0</span><br><span class="line">Authorization:Digest username=&quot;bri&quot; realm=&quot;Family&quot; nonce=&quot;nonce123&quot; response=&quot;MD5123456&quot;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP/1.0 200 OK</span><br><span class="line">......</span><br></pre></td></tr></table></figure>
+<p>这里有所简化（没有包括预授权、保护质量协商等内容），但是已经可以说明摘要认证与基本认证的区别 </p>
+<p>这里传输的MD5123456，不是完整的密码，而是通过摘要算法（MD5）计算出的密码摘要。所以在网络上传输的，只是密码的摘要，而不是完整的密码，这样就避免了完整的密码被泄露 </p>
+<p>其次，MD5算法与BASE64不同，仅通过摘要字符串，很难逆向计算出原始字符串 </p>
+<p>并且，这里server发送Authorization首部时，还发送了一个nonce作为随机数，nonce要参与密码摘要的计算。由于每次的随机数都是不同的，所以计算得到的摘要结果也是不同的。这就避免了恶意用户截取到摘要结果后，发起重放攻击 </p>
+<p>这里要说明的是，认证（基本认证、摘要认证）是HTTP规范的一部分，具体实现依赖于server和client </p>
+<p>比如说，有一些早期的浏览器，只实现了基本认证，而没有实现摘要认证，这是完全可能的。那么这种浏览器，就无法访问要求摘要认证的http server了 </p>
+<p>http认证，我认为只能是网络安全的一个补充，保护一些不太敏感的文档，还是有点作用的。因为你可以不需要在应用层面额外做编码工作，将认证的工作交给服务器，来节省一点工作量 </p>
+<p>但是现在的很多WEB应用，用HTTP认证的方式来保护是不可行的。比如说很多的B2C应用，如果用http认证，那很多只是想看看，懒得去注册的用户（比如我），肯定就会把网页关掉了 </p>
+<h1 id="密码传输的问题"><a href="#密码传输的问题" class="headerlink" title="密码传输的问题"></a>密码传输的问题</h1><p>我多年前做的一个内部OA系统，虽然用MD5算法，将密码摘要以后存在数据库里，但是这样做，仅仅是保证了，“如果database server被攻破”，用户的密码不会被泄露而已，如果攻击是发生在internet传输过程之中，还是防不胜防的 </p>
+<p>其实现在非常多的网站依然有这个问题，包括很大的知名B2C网站。就拿当当网举个例子： </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0079/5372/fa4e26e8-9564-3619-91d0-c86e786abad2.jpg" alt=""></p>
+<p>这就是html里的一个普通的form，所以当用户填完用户名和密码，点击“登陆”按钮之后，浏览器就会发起一个post请求，把表单的内容放在http request的entity-body里发出去。</p>
+<p>下面是我用chrome的开发者工具截取到的原始http request： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">__VIEWSTATE:/wEPDwULLTE4ODM3NDAxMTFkZA== </span><br><span class="line">txtUsername:xxx@xxx.com（这是我在当当的注册邮箱） </span><br><span class="line">txtPassword:xxxxxx（这是我在当当的注册密码） </span><br><span class="line">login_type:0 </span><br><span class="line">A12B56CD78EF90G:ATkRHcR2iJwy2e1s13/1kg== </span><br><span class="line">wdvalidatetoken:kW3+YmOUtaU=</span><br></pre></td></tr></table></figure>
+<p>由于现在大部分web应用的UI，还是基于HTML的，所以很难避免这个问题 </p>
+<p>一种办法，是在客户端通过javascript做一些处理。另一种办法，就是WEB应用自行开发浏览器安全输入的插件，比如说支付宝就是这么做的： </p>
+<p><img src="http://dl.iteye.com/upload/attachment/0079/5378/7edc687f-884f-3166-a0a6-19bf48709f53.jpg" alt=""></p>
+<p>可以看到，上图并不是一个html表单，而是一个私有的控件，那么用户名和密码就可以在其中加密后传输了，到了支付宝的server再解密，避免了密码明文传输</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2013/09/24/松鼠书读书笔记（七）——HTTPS/" rel="next" title="松鼠书读书笔记（七）——HTTPS">
+                <i class="fa fa-chevron-left"></i> 松鼠书读书笔记（七）——HTTPS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2013/09/24/关于JCP/" rel="prev" title="关于JCP">
+                关于JCP <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xqhu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">265</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本认证"><span class="nav-number">1.</span> <span class="nav-text">基本认证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#摘要认证"><span class="nav-number">2.</span> <span class="nav-text">摘要认证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#密码传输的问题"><span class="nav-number">3.</span> <span class="nav-text">密码传输的问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xqhu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
