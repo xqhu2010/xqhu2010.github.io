@@ -380,10 +380,19 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">public class Bootstrap &#123;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) throws MalformedURLException,</span><br><span class="line">			ClassNotFoundException &#123;</span><br><span class="line"></span><br><span class="line">		String FQCN = &quot;org.apache.catalina.startup.Catalina&quot;;// 要加载的目标类</span><br><span class="line"></span><br><span class="line">		try &#123;</span><br><span class="line">			Class.forName(FQCN);// it&apos;s NOT OK</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		try &#123;</span><br><span class="line">			ClassLoader.getSystemClassLoader().loadClass(FQCN);// it&apos;s NOT OK</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		try &#123;</span><br><span class="line">			Bootstrap.class.getClassLoader().loadClass(FQCN);// it&apos;s NOT OK</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		try &#123;</span><br><span class="line">			Thread currentThread = Thread.currentThread();</span><br><span class="line">			currentThread.getContextClassLoader().loadClass(FQCN);// it&apos;s NOT OK</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		ClassLoader myClassLoader = createClassLoader();</span><br><span class="line"></span><br><span class="line">		myClassLoader.loadClass(FQCN);// it&apos;s OK</span><br><span class="line"></span><br><span class="line">		System.out.println(&quot;over&quot;);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 实例化一个ClassLoader，加载了C盘根目录下的dummy_catalina.jar，其中包含Catalina类的定义</span><br><span class="line">	 */</span><br><span class="line">	private static ClassLoader createClassLoader() throws MalformedURLException &#123;</span><br><span class="line">		String filePath = &quot;c://dummy_catalina.jar&quot;;</span><br><span class="line">		File file = new File(filePath);</span><br><span class="line">		URL url = file.toURI().toURL();</span><br><span class="line">		URL[] urls = new URL[] &#123; url &#125;;</span><br><span class="line">		ClassLoader myClassLoader = new URLClassLoader(urls);</span><br><span class="line">		return myClassLoader;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
+	<div>
+	  
+		<div>
     
+		<blockquote class="blockquote-center">本文结束<i class="fa fa-paw"></i>感谢您的阅读</blockquote>
     
-    
+</div>
+	  
+	</div>
 
+    
+    
+    
     
 
     
@@ -401,8 +410,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2013/09/24/我对协议的理解/" rel="next" title="我对协议的理解">
-                <i class="fa fa-chevron-left"></i> 我对协议的理解
+              <a href="/2013/09/24/spring加载外部的配置文件和类/" rel="next" title="spring加载外部的配置文件和类">
+                <i class="fa fa-chevron-left"></i> spring加载外部的配置文件和类
               </a>
             
           </div>
@@ -411,8 +420,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2013/09/24/松鼠书读书笔记（一）——HTTP概述/" rel="prev" title="松鼠书读书笔记（一）——HTTP概述">
-                松鼠书读书笔记（一）——HTTP概述 <i class="fa fa-chevron-right"></i>
+              <a href="/2013/09/24/系统的扩展性/" rel="prev" title="系统的扩展性">
+                系统的扩展性 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>

@@ -361,10 +361,19 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_t group = dispatch_group_create();</span><br><span class="line"></span><br><span class="line">while([rs next])&#123;</span><br><span class="line"></span><br><span class="line">    dispatch_group_enter(group);</span><br><span class="line"></span><br><span class="line">    dispatch_async(dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line"></span><br><span class="line">        [httpHelper getSecure:url completionHandler:^(NSDictionary* dict)&#123;</span><br><span class="line">            // 子任务</span><br><span class="line">            dispatch_group_leave(group);                     </span><br><span class="line">        &#125;];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dispatch_group_notify(group, dispatch_get_global_queue(0, 0), ^&#123;</span><br><span class="line">    // 子任务全部完成后，才执行                        </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
       
     </div>
+	<div>
+	  
+		<div>
     
+		<blockquote class="blockquote-center">本文结束<i class="fa fa-paw"></i>感谢您的阅读</blockquote>
     
-    
+</div>
+	  
+	</div>
 
+    
+    
+    
     
 
     
