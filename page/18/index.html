@@ -259,7 +259,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/spring加载外部的配置文件和类/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/classloader简介/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xqhu">
@@ -278,7 +278,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2013/09/24/spring加载外部的配置文件和类/" itemprop="url">spring加载外部的配置文件和类</a></h1>
+                <a class="post-title-link" href="/2013/09/24/classloader简介/" itemprop="url">classloader简介</a></h1>
         
 
         <div class="post-meta">
@@ -351,10 +351,10 @@
 
       
         
-          <p>今天同事遇到一个需求： 在外部以jar包的形式存放若干个插件，其中包含插件的类，以及spring配置文件；jar包不在classpath里<br>
+          <p>java classloader简介<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2013/09/24/spring加载外部的配置文件和类/#more" rel="contents">
+            <a class="btn" href="/2013/09/24/classloader简介/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -405,7 +405,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/RPC简介，及与web service的对比/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/系统的扩展性/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xqhu">
@@ -424,7 +424,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2013/09/24/RPC简介，及与web service的对比/" itemprop="url">RPC简介，及与web service的对比</a></h1>
+                <a class="post-title-link" href="/2013/09/24/系统的扩展性/" itemprop="url">系统的扩展性</a></h1>
         
 
         <div class="post-meta">
@@ -459,8 +459,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
+                  <a href="/categories/架构设计/" itemprop="url" rel="index">
+                    <span itemprop="name">架构设计</span>
                   </a>
                 </span>
 
@@ -497,10 +497,10 @@
 
       
         
-          <p>最近分析的这个系统，逻辑架构中有一层是RPC interface。之前对RPC不熟悉，就上网搜索了一下资料，在此总结一下<br>
+          <p>本文谈下我个人对“系统的扩展性”的看法。首先需要声明，这里的扩展性不是指伸缩性（scalability），而是指灵活性（flexibility）<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2013/09/24/RPC简介，及与web service的对比/#more" rel="contents">
+            <a class="btn" href="/2013/09/24/系统的扩展性/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -843,7 +843,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/我对协议的理解/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/spring加载外部的配置文件和类/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xqhu">
@@ -862,7 +862,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2013/09/24/我对协议的理解/" itemprop="url">我对协议的理解</a></h1>
+                <a class="post-title-link" href="/2013/09/24/spring加载外部的配置文件和类/" itemprop="url">spring加载外部的配置文件和类</a></h1>
         
 
         <div class="post-meta">
@@ -897,8 +897,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/其它/" itemprop="url" rel="index">
-                    <span itemprop="name">其它</span>
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
                   </a>
                 </span>
 
@@ -935,10 +935,156 @@
 
       
         
-          <p>今天突然想到的对“协议”的理解<br>
+          <p>今天同事遇到一个需求： 在外部以jar包的形式存放若干个插件，其中包含插件的类，以及spring配置文件；jar包不在classpath里<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2013/09/24/我对协议的理解/#more" rel="contents">
+            <a class="btn" href="/2013/09/24/spring加载外部的配置文件和类/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/java annotation简介/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xqhu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="xqhu's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2013/09/24/java annotation简介/" itemprop="url">java annotation简介</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:13:00+09:00">
+                2013-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>开发中自定义annotation的场景不太多，但是很多框架的源码里都用到了自定义annotation，不了解的话就看不懂了，所以也简单地学习一下<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2013/09/24/java annotation简介/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1135,7 +1281,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/配合使用svn和maven/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/JPDA简单总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="xqhu">
@@ -1154,7 +1300,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2013/09/24/配合使用svn和maven/" itemprop="url">配合使用svn和maven</a></h1>
+                <a class="post-title-link" href="/2013/09/24/JPDA简单总结/" itemprop="url">JPDA简单总结</a></h1>
         
 
         <div class="post-meta">
@@ -1189,8 +1335,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/研发管理/" itemprop="url" rel="index">
-                    <span itemprop="name">研发管理</span>
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
                   </a>
                 </span>
 
@@ -1227,10 +1373,10 @@
 
       
         
-          <p>目前项目组在开发一个项目，由多个子模块构成，构建工具是maven，版本控制工具是svn。本文总结一下我们日常代码管理的做法<br>
+          <p>我们平时经常使用的debug功能，其实背后大有文章。本文简要介绍JPDA<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2013/09/24/配合使用svn和maven/#more" rel="contents">
+            <a class="btn" href="/2013/09/24/JPDA简单总结/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1523,152 +1669,6 @@
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2013/09/24/tomcat的classloader机制/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2013/09/24/JPDA简单总结/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xqhu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="xqhu's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2013/09/24/JPDA简单总结/" itemprop="url">JPDA简单总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2013-09-24T11:13:00+09:00">
-                2013-09-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/java/" itemprop="url" rel="index">
-                    <span itemprop="name">java</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>我们平时经常使用的debug功能，其实背后大有文章。本文简要介绍JPDA<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2013/09/24/JPDA简单总结/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
