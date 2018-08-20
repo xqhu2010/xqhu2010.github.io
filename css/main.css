@@ -661,7 +661,7 @@ pre .javascript .function {
 .page-home .post-type-quote blockquote,
 .page-post-detail .post-type-quote blockquote {
   position: relative;
-  margin: 40px 0;
+  margin: 25px 0;
   padding: 0;
   border-left: none;
   text-align: center;
@@ -1823,7 +1823,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #a4d2ff;
+  background: #ff951c;
 }
 .links-of-blogroll {
   font-size: 13px;
